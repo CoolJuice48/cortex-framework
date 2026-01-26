@@ -1,3 +1,10 @@
+# Force reload modules to avoid caching issues
+import sys
+if 'graph' in sys.modules:
+    del sys.modules['graph']
+if 'classifier' in sys.modules:
+    del sys.modules['classifier']
+
 from embed import Embedder
 from graph import KnowledgeGraph, check_and_split_domains, query_graph
 from extraction import QuestionExtractor, insert_question_smart

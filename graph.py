@@ -359,7 +359,7 @@ def reassign_questions_to_subdomains(
 """
 Periodically check if any domains should split
 """
-def check_and_split_domains(graph, classifier):
+def check_and_split_domains(graph, classifier, threshold_questions=50):
    for domain_name in list(graph.domains.keys()):
       analysis = analyze_domain_coherence(graph, domain_name)
       
