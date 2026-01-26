@@ -6,7 +6,7 @@ from typing import List
 # ------------------------------------------------------------------ #
 
 class Embedder:
-   def __init__(self, model_name='all-mpnet-base-v2'):
+   def __init__(self, model_name='all-MiniLM-L6-v2'):
       """
       all-MiniLM-L6-v2: Fast, 384 dimensions, good quality
       all-mpnet-base-v2: Slower, 768 dimensions, better quality

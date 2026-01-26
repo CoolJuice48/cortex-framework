@@ -17,7 +17,6 @@ import json
 import csv
 # ------------------------------------------------------------------ #
 
-
 """
 Standardized document loading & ingestion
 """
