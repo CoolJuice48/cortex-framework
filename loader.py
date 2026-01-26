@@ -1,7 +1,12 @@
+# ------------------------------------------------------------------ #
+# Cortex imports
 from embed import Embedder
 from graph import KnowledgeGraph, cosine_similarity
 from extraction import QuestionExtractor, insert_question_smart
 from structs import Document
+from classifier import DomainClassifier
+# ------------------------------------------------------------------ #
+# Python imports
 from pathlib import Path
 from typing import List, Optional, Callable
 from datetime import datetime
@@ -10,6 +15,8 @@ import os
 import logging
 import json
 import csv
+# ------------------------------------------------------------------ #
+
 
 """
 Standardized document loading & ingestion
@@ -238,12 +245,13 @@ class DocumentLoader:
 
    """
    Load documents and ingest them into the graph
-   Combines loading and ingestion into one step
+   Combines loading and ingestion into one step (may separate later)
    """
    def load_and_ingest(
       self,
       graph: KnowledgeGraph,
       extractor: QuestionExtractor,
+      classifier: DomainClassifier,
       directory: str,
       domain: str='unknown',
       **kwargs
@@ -282,27 +290,31 @@ class DocumentLoader:
             # Add document to graph
             graph.add_document(doc)
 
+            # STEP ZERO: Identify domains for this document
+            existing_domains = list(graph.domains.keys())
+            doc_domains = classifier.identify_domain(doc.text, existing_domains)
+            # Log domains
+            self.logger.info(f"\nDoc {i}/{len(documents)}: {doc.id}")
+            self.logger.info(f"  Identified domains: {', '.join(doc_domains)}")
+
             # STEP ONE: Check if this doc answers existing questions
             existing_answered = []
-
-            # Optimize, only check questions in the same domain
-            relevant_questions = [
+            for domain in doc_domains:
+               # Optimize, only check questions in the same domain
+               relevant_questions = [
                   q for q in graph.questions.values()
                   if domain in q.domains
-            ]
-            # If no domain filter (early in ingestion), check all
-            if not relevant_questions:
-               relevant_questions = list(graph.questions.values())
+               ]
+               # If no domain filter (early in ingestion), check all
+               if not relevant_questions:
+                  relevant_questions = list(graph.questions.values())
 
-            # Use filtered list of only relevant, domain-specific questions
-            for question in relevant_questions:
-               similarity = cosine_similarity(question.embedding, doc.embedding)
-               if similarity > 0.75: # Threshold
-                  question.answer_documents.append(doc)
-                  existing_answered.append(question.text)
-
-            if existing_answered:
-               self.logger.info(f"  Document answers {len(existing_answered)} existing questions")
+               # Check for relevant questions in domain
+               for question in relevant_questions:
+                  similarity = cosine_similarity(question.embedding, doc.embedding)
+                  if similarity > 0.75: # Threshold
+                     question.answer_documents.append(doc)
+                     existing_answered.append(question.text)
             
             # STEP TWO: Extract new questions
             questions = extractor.extract_from_text(

@@ -1,7 +1,9 @@
-from typing import Optional, List, Tuple
-import uuid
 from structs import Document, Question, are_same_question, cosine_similarity
 from embed import Embedder
+from classifier import DomainClassifier
+from typing import Optional, List, Tuple
+import uuid
+import numpy as np
 
 class KnowledgeGraph:
    def __init__(self, embedder: Embedder):
@@ -190,3 +192,89 @@ def answer_question(
    else:
       print(f"No cached answer (best match: {similarity:.3f})")
       return None
+   
+"""
+Analyzes if a domain should split based on directional divergence
+Returns a dict with shape
+{
+   bool: should_split,
+   float: variance,
+   float: avg_similarity,
+   int: num_questions
+}
+"""
+def analyze_domain_coherence(
+      graph: KnowledgeGraph,
+      domain_name: str='general'
+) -> dict:
+   questions = [q for q in graph.questions.values() if domain_name in q.domains]
+
+   # Check: Minimum size to split
+   if len(questions) < 10:
+      return {
+         'Should split': False,
+         'Reason': 'insufficient_data'
+      }
+
+   # Get direction (centroids of answer document embeddings)
+   directions = []
+   for q in questions:
+      if q.answer_documents:
+         centroid = np.mean([doc.embedding for doc in q.answer_documents], axis=0)
+         directions.append(centroid)
+   
+   if len(directions) < 2:
+      return {
+         'Should split': False,
+         'Reason': 'insufficient_data'
+      }
+   
+   # Compute variance in directions
+   directions_array = np.array(directions)
+   variance = np.var(directions_array, axis=0).mean()
+
+   # Compute cosine similarity between all pairs
+   similarities = []
+   for i in range(len(directions)):
+      for j in range(i+1, len(directions)):
+         sim = cosine_similarity(directions[i], directions[j])
+         similarities.append(sim)
+   
+   avg_similarity = np.mean(similarities)
+
+   return {
+      'should_split': variance > 0.15 or avg_similarity < 0.6, # Thresholds, must be tuned
+      'variance': variance,
+      'avg_similarity': avg_similarity,
+      'num_questions': len(questions)
+   }
+
+"""
+Uses an LLM to split domains into subdomains
+"""
+def split_domain(
+   graph: KnowledgeGraph,
+   domain_name: str="general",
+   classifier: DomainClassifier
+) -> List[str]:
+   questions = [q for q in graph.questions.values() if domain_name in q.domains]
+
+   # Sample questions for LLM
+   sample_questions = [q.text for q in questions[:20]]
+
+   prompt = f"""The domain "{domain_name}" has become too broad and needs to split into more specific subdomains.
+
+   Here are sample questions from this domain:
+   {chr(10).join(f"- {q}" for q in sample_questions)}
+
+   Based on these questions, suggest 2-4 subdomains to split this into.
+
+   Requirements:
+   - Subdomains should be specific and meaningful
+   - Each subdomain should be clearly distinct
+   - Use lowercase with underscores
+   - Format as JSON array
+
+   Example: ["automatic_transmission", "manual_transmission", "transmission_fluid"]
+
+   Suggest subdomains now: (please and thank you!)"""
