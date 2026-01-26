@@ -1,5 +1,4 @@
 from embed import cosine_similarity
-from classifier import DomainClassifier
 from dataclasses import dataclass, field
 from typing import List, Optional, Set
 import numpy as np
@@ -25,20 +24,20 @@ class Answer:
    confidence: float=1.0                                         # How confident the model is in the accuracy of the answer
 
    # Which questions does this answer?
-   question_ids: Set[str] = field(default_factory=set)            # Use set for deduplication
+   question_ids: Set[str] = field(default_factory=set)           # Use set for deduplication
 
 """ An LLM-generated question about a certain document """
 @dataclass
 class Question:
-   id: str=field(default_factory=lambda: str(uuid.uuid4()))  # uuid4(), used to find what question an answer references
-   text: str=""                                              # Raw text of question
-   embedding:  Optional[np.ndarray]=None                     # Embedded question
-   answers:    List[Answer]=field(default_factory=list)      # Answers to the question
-   children:   List['Question']=field(default_factory=list)  # List of follow-up questions
-   parents:    List['Question']=field(default_factory=list)  # What this question is a follow-up to
-   neighbors:  Set['Question']=field(default_factory=set)    # Similar questions not directly related (uses answer_documents as a check)
-   domain_ids: Set[str]=field(default_factory=set)           # Which domains this question falls under
-   confidence: float=1.0                                     # How confident the model is in the validity of the question
+   id: str=field(default_factory=lambda: str(uuid.uuid4()))    # uuid4(), used to find what question an answer references
+   text: str=""                                                # Raw text of question
+   embedding:    Optional[np.ndarray]=None                     # Embedded question
+   answers:      List[Answer]=field(default_factory=list)      # Answers to the question
+   children:     List['Question']=field(default_factory=list)  # List of follow-up questions
+   parents:      List['Question']=field(default_factory=list)  # What this question is a follow-up to
+   neighbors:    Set['Question']=field(default_factory=set)    # Similar questions not directly related (uses answer_documents as a check)
+   domain_names: Set[str]=field(default_factory=set)           # Which domains this question falls under
+   confidence:   float=1.0                                     # How confident the model is in the validity of the question
 
 """
 A domain of knowledge
@@ -67,18 +66,18 @@ Checks if two questions point to the same source knowledge
 Returns: True if they do, False if they don't
 """
 def has_circular_dependency(q1: Question, q2: Question, threshold: float=0.5) -> bool:
-   if not q1.answer_documents or not q2.answer_documents:
+   if not q1.answers or not q2.answers:
       return False
    
    # Do they point to the same documents?
-   q1_doc_ids = {doc.id for doc in q1.answer_documents}
-   q2_doc_ids = {doc.id for doc in q2.answer_documents}
+   q1_doc_ids = {doc.id for doc in q1.answers}
+   q2_doc_ids = {doc.id for doc in q2.answers}
    if q1_doc_ids == q2_doc_ids:
       return True
    
    # Do answer docs have similar embeddings?
-   q1_doc_embeddings = [doc.embedding for doc in q1.answer_documents if doc.embedding is not None]
-   q2_doc_embeddings = [doc.embedding for doc in q2.answer_documents if doc.embedding is not None]
+   q1_doc_embeddings = [doc.embedding for doc in q1.answers if doc.embedding is not None]
+   q2_doc_embeddings = [doc.embedding for doc in q2.answers if doc.embedding is not None]
    if not q1_doc_embeddings or not q2_doc_embeddings:
       return False
    
@@ -176,6 +175,7 @@ Returns a list of new subdomains discovered
 def check_divergence(
    domain: Domain,
    all_questions: List[Question],
+   classifier: None,
    depth: int = 0,
    max_depth: int=3,
    min_divergence: float=0.3,
@@ -223,7 +223,7 @@ def check_divergence(
 
          # If cluster is satisfactory, create subdomain
          if len(cluster) >= min_cluster_size:
-            subdomain_name = DomainClassifier.identify_subdomain(list(cluster))
+            subdomain_name = classifier.identify_subdomain(list(cluster))
 
             new_subdomain = Domain(
                name=subdomain_name,
@@ -239,7 +239,7 @@ def check_divergence(
             deeper_subdomains = check_divergence(
                new_subdomain,
                all_questions,
-               depth=depth+=1
+               depth=depth + 1
             )
             new_subdomains.extend(deeper_subdomains)
 

@@ -318,7 +318,7 @@ class DocumentLoader:
                for question in relevant_questions:
                   similarity = cosine_similarity(question.embedding, doc.embedding)
                   if similarity > 0.75: # Threshold
-                     question.answer_documents.append(doc)
+                     question.answers.source_documents.append(doc)
                      existing_answered.append(question.text)
             
             # STEP TWO: Extract new questions
@@ -331,8 +331,8 @@ class DocumentLoader:
 
             # STEP 3: Add new questions to graph, update nearby nodes
             self.logger.info(f"\nProcessing doc [{i}/{len(documents)}]: {doc.metadata.get('filename', doc.id)}")
-            for q_text, answer_docs in questions:
-               result = insert_question_smart(graph, q_text, answer_docs, domain)
+            for q_text, answers in questions:
+               result = insert_question_smart(graph, q_text, answers, domain)
                # Successful question addition
                if result:
                   total_stats['questions_added'] += 1

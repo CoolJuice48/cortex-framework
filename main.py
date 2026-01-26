@@ -94,11 +94,20 @@ else:
         limit=FILE_LIMIT,
         row_limit=ROW_LIMIT
     )
-    
+
     # Save embeddings for next time
     print(f"Saving embeddings to cache...")
     loader.save_embeddings(documents, EMBEDDING_CACHE)
     print(f"Cached {len(documents)} document embeddings")
+
+# Classify entire batch
+print("Classifying all documents...")
+existing_domains = list(graph.domains.keys())
+doc_classifications = classifier.classify_document_batch(
+    documents,
+    existing_domains=existing_domains,
+    batch_size=10  # Process 10 at a time
+)
 
 print(f"Ready to process {len(documents)} documents")
 
@@ -122,7 +131,7 @@ for i, doc in enumerate(documents, start=1):
         
         # STEP 0: Identify domain(s) for this document
         existing_domains = list(graph.domains.keys())
-        doc_domains = classifier.identify_domain(doc.text, existing_domains)
+        doc_domains = doc_classifications.get(doc.id, ['general'])
         
         loader.logger.info(f"\nDoc {i}/{len(documents)}: {doc.id}")
         loader.logger.info(f"  Identified domains: {', '.join(doc_domains)}")

@@ -1,6 +1,6 @@
 # ------------------------------------------------------------------ #
 # Cortex imports
-from structs import Document, Question, are_same_question, cosine_similarity
+from structs import Document, Question, Answer, are_same_question, cosine_similarity
 from embed import Embedder
 from classifier import DomainClassifier
 # ------------------------------------------------------------------ #
@@ -13,9 +13,9 @@ import json
 
 class KnowledgeGraph:
    def __init__(self, embedder: Embedder):
-      self.questions = {} # id -> Question
-      self.documents = {} # id -> Document
-      self.domains = {}   # domain_name -> list of root questions
+      self.questions = {} # question_id (str) -> Question
+      self.documents = {} # document_id (str) -> Document
+      self.domains = {}   # domain_name (str)  -> Domain
       self.embedder = embedder
 
    """ Adds a document to the graph """
@@ -35,15 +35,15 @@ class KnowledgeGraph:
    def add_question(
       self,
       text: str,
-      answer_documents: List[Document],
-      domain: str="general",
+      answer: Answer,
+      domain_names: List[str]=["general"],
       parent_id: Optional[str]=None
    ) -> Optional[Question]:
       # Create the question
       new_q = Question(
          text=text,
-         answer_documents=answer_documents,
-         domains=[domain]
+         answers=[answer],
+         domain_names=domain_names
       )
       new_q.embedding = self.embedder.embed(text)
 
@@ -54,22 +54,39 @@ class KnowledgeGraph:
          return None
       
       # Generate unique ID
-      q_id = str(uuid.uuid4())
+      q_id = new_q.id
       self.questions[q_id] = new_q
+
+      # Link answer to this question
+      answer.question_ids.add(q_id)
 
       # Parent specified: link question to parent
       if parent_id and parent_id in self.questions:
          parent = self.questions[parent_id]
          new_q.parents.append(parent)
          parent.children.append(new_q)
-      # No parent specified: root question for domain
-      else:
-         if domain not in self.domains:
-            self.domains[domain] = []
-         self.domains[domain].append(new_q)
 
-      return new_q
+      # Add to domain(s)
+      for domain_name in domain_names:
+         # Create domain if doesn't exist
+         if domain_name not in self.domains:
+            from structs import Domain
+            self.domains[domain_name] = Domain(
+               name=domain_name,
+               questions=set(),
+               parent_domain=None
+            )
+         # Add question to domain
+         domain = self.domains[domain_name]
+         domain.questions.add(new_q)
+
+         # If no parent, is root question
+         if not parent_id:
+            # Domain implicitly tracks roots
+            pass
    
+      return new_q
+
    """
    Check if question already in graph
    Uses circular dependency check
@@ -81,15 +98,21 @@ class KnowledgeGraph:
       return None
 
    """ Returns all questions with no parents """
-   def get_question_roots(self, domain: Optional[str]=None) -> List[Question]:
-      if domain:
-         return self.domains.get(domain, [])
+   def get_question_roots(self, domain_name: Optional[str]=None) -> List[Question]:
+      if domain_name:
+         if domain_name not in self.domains:
+            return []
+         domain = self.domains[domain_name]
+
+         # Return only questions with no parents
+         return [q for q in domain.questions if not q.parents]
       else:
+         # Return all root questions accross all domains
          return [q for q in self.questions.values() if not q.parents]
 
    """ Returns root questions for a specified domain """
-   def get_domain_roots(self, domain: str) -> List[Question]:
-      return self.domains.get(domain, [])
+   def get_domain_roots(self, domain_name: str) -> List[Question]:
+      return self.get_question_roots(domain_name)
    
 """
 Find the most appropriate parent for a new question
@@ -121,15 +144,20 @@ def find_parent_question(
 
 """
 Insert a question and automatically find its parent
+Returns Question if added, none if duplicate
 """
 def insert_question_smart(
    graph: KnowledgeGraph,
    text: str,
-   answer_documents: List[Document],
-   domain: str="general"
+   answer: Answer,
+   domain_names: List[str]=["general"]
 ) -> Optional[Question]:
    # Temp question to find parent
-   temp_q = Question(text=text, answer_documents=answer_documents)
+   temp_q = Question(
+      text=text,
+      answers=[answer],
+      domain_names=domain_names
+   )
    temp_q.embedding = graph.embedder.embed(text)
 
    # Check for duplicates
@@ -138,21 +166,17 @@ def insert_question_smart(
    
    # Find parent
    parent = find_parent_question(graph, temp_q)
+   parent_id = parent.id if parent else None
 
-   # Add to graph
-   q_id = str(uuid.uuid4())
-   graph.questions[q_id] = temp_q
-   temp_q.domains = [domain]
+   # Add to graph (add_question() handles domain creation)
+   added_question = graph.add_question(
+      text=text,
+      answer=answer,
+      domain_names=domain_names,
+      parent_id=parent_id
+   )
 
-   if parent:
-      temp_q.parents.append(parent)
-      parent.children.append(temp_q)
-   else:
-      if domain not in graph.domains:
-         graph.domains[domain] = []
-      graph.domains[domain].append(temp_q)
-
-   return temp_q
+   return added_question
 
 """
 Finds the most relevant questions in the graph.
@@ -184,7 +208,7 @@ def answer_question(
    graph: KnowledgeGraph,
    question_text: str,
    confidence_threshold: float = 0.8
-) -> Optional[List[Document]]:
+) -> Optional[List[Answer]]:
    results = query_graph(graph, question_text, top_k=1)
    
    if not results:
@@ -194,7 +218,7 @@ def answer_question(
    
    if similarity >= confidence_threshold:
       print(f"Cache hit! Similar to: '{best_match.text}' (similarity: {similarity:.3f})")
-      return best_match.answer_documents
+      return best_match.answers
    else:
       print(f"No cached answer (best match: {similarity:.3f})")
       return None
@@ -215,24 +239,43 @@ def analyze_domain_coherence(
 ) -> dict:
    questions = [q for q in graph.questions.values() if domain_name in q.domains]
 
+   # Get domain object
+   if domain_name not in graph.domains:
+      return {
+         'should_split': False,
+         'reason': 'domain_not_found',
+         'num_questions': 0
+      }
+   
+   domain = graph.domains[domain_name]
+   questions = list(domain.questions)
+
    # Check: Minimum size to split
    if len(questions) < 10:
       return {
          'should_split': False,
-         'Reason': 'insufficient_data'
+         'reason': 'insufficient_data',
+         'num_questions': len(questions)
       }
 
    # Get direction (centroids of answer document embeddings)
    directions = []
    for q in questions:
-      if q.answer_documents:
-         centroid = np.mean([doc.embedding for doc in q.answer_documents], axis=0)
-         directions.append(centroid)
+      if q.answers:
+         # Get all source documents from all answers
+         all_docs = []
+         for answer in q.answers:
+            all_docs.extend(answer.source_documents)
+
+         if all_docs:
+            centroid = np.mean([doc.embedding for doc in q.answers], axis=0)
+            directions.append(centroid)
    
    if len(directions) < 2:
       return {
          'should_split': False,
-         'Reason': 'insufficient_data'
+         'reason': 'insufficient_data',
+         'num_questions': len(questions)
       }
    
    # Compute variance in directions
@@ -257,13 +300,20 @@ def analyze_domain_coherence(
 
 """
 Uses an LLM to split domains into subdomains
+Returns a list of new subdomain names
 """
 def split_domain(
    graph: KnowledgeGraph,
    classifier: DomainClassifier,
    domain_name: str="general"
 ) -> List[str]:
-   questions = [q for q in graph.questions.values() if domain_name in q.domains]
+   # Get domain object
+   if domain_name not in graph.domains:
+      print(f"  Domain '{domain_name}' not found")
+      return []
+   
+   domain = graph.domains[domain_name]
+   questions = list(domain.questions)
 
    # Sample questions for LLM
    sample_questions = [q.text for q in questions[:20]]
@@ -316,19 +366,39 @@ Uses an LLM, but could use centroid + nearest centroid at risk of reduced accura
 def reassign_questions_to_subdomains(
    graph: KnowledgeGraph,
    classifier: DomainClassifier,
-   old_domain: str,
-   new_subdomains: List[str]
+   old_domain_name: str,
+   new_subdomain_names: List[str]
 ) -> None:
-   questions = [q for q in graph.questions.values() if old_domain in q.domains]
-   print(f"\nReassigning {len(questions)} questions from '{old_domain}' to subdomains...")
+   # Get old domain
+   if old_domain_name not in graph.domains:
+      print(f"  Domain '{old_domain_name}' not found")
+      return
+   
+   old_domain = graph.domains[old_domain_name]
+   questions = list(old_domain.questions)
 
+   print(f"\nReassigning {len(questions)} questions from '{old_domain_name}' to subdomains...")
+
+   # Create new subdomain objects
+   from structs import Domain
+   for subdomain_name in new_subdomain_names:
+      if subdomain_name not in graph.domains:
+         new_subdomain = Domain(
+            name=subdomain_name,
+            questions=set(),
+            parent_domain=old_domain # Link to parent
+         )
+         graph.domains[subdomain_name] = new_subdomain
+         old_domain.subdomains.append(new_subdomain) # Track subdomain
+
+   # Reassign each question
    for question in questions:
       prompt = f"""Which subdomain does this question belong to?
 
       Question: {question.text}
 
       Available subdomains:
-      {chr(10).join(f"- {sd}" for sd in new_subdomains)}
+      {chr(10).join(f"- {sd}" for sd in new_subdomain_names)}
 
       Return ONLY the subdomain name, nothing else."""
 
@@ -342,38 +412,70 @@ def reassign_questions_to_subdomains(
       # Parse subdomain
       subdomain = response.content[0].text.strip().lower()
 
-      # Update question's domains
-      question.domains.remove(old_domain)
-      if subdomain in new_subdomains:
-         question.domains.append(subdomain)
-      else:
-         question.domains.append(new_subdomains[0]) # Fallback
+      # Validate subdomain
+      if subdomain_name not in new_subdomain_names:
+         subdomain_name = new_subdomain_names[0] # Fallback
+
+      # Remove question from old domain
+      old_domain.questions.discard(question) # Remove from set
+      question.domains.remove(old_domain_name)
+
+      # Add question to new subdomain
+      new_subdomain = graph.domains[subdomain_name]
+      new_subdomain.questions.add(question) # Add to set
+      question.domains.append(subdomain_name)
 
       print(f"  '{question.text[:60]}...' → {subdomain}")
 
-   # Remove old domain, add new ones
-   del graph.domains[old_domain]
-   for subdomain in new_subdomains:
-      graph.domains[subdomain] = []
+   # Keep old domain as parent, mark as split
+   print(f"\nDomain '{old_domain_name}' split into {len(new_subdomain_names)} subdomains")
 
 """
 Periodically check if any domains should split
+Returns the number of domains that have been split
 """
-def check_and_split_domains(graph, classifier, threshold_questions=50):
+def check_and_split_domains(
+   graph: KnowledgeGraph,
+   classifier: DomainClassifier,
+   threshold_questions: int=50
+) -> int:
+   splits_performed = 0
+
+   # Iterate over copy of keys
    for domain_name in list(graph.domains.keys()):
+      domain = graph.domains[domain_name]
+      
+      # Skip if already split
+      if domain.subdomains:
+         continue
+
+      # Skip if too small
+      if len(domain.questions) < threshold_questions:
+         continue
+
+      # Analyze coherence
       analysis = analyze_domain_coherence(graph, domain_name)
       
-      if analysis['should_split']:
+      if analysis.get('should_split', False):
          print(f"\n{'='*60}")
          print(f"DOMAIN SPLIT TRIGGERED: {domain_name}")
-         print(f"  Variance: {analysis['variance']:.3f}")
-         print(f"  Avg similarity: {analysis['avg_similarity']:.3f}")
+         print(f"  Variance: {analysis.get('variance', 'N/A')}")
+         print(f"  Avg similarity: {analysis.get('avg_similarity', 'N/A')}")
          print(f"  Questions: {analysis['num_questions']}")
          print(f"{'='*60}")
          
          # Split the domain
-         new_subdomains = split_domain(graph, classifier, domain_name)
-         print(f"New subdomains: {new_subdomains}")
+         new_subdomain_names = split_domain(graph, classifier, domain_name)
+         print(f"New subdomains: {new_subdomain_names}")
          
          # Reassign questions
-         reassign_questions_to_subdomains(graph, classifier, old_domain=domain_name, new_subdomains=new_subdomains)
+         reassign_questions_to_subdomains(
+            graph,
+            classifier,
+            old_domain=domain_name,
+            new_subdomains=new_subdomain_names
+         )
+
+         splits_performed += 1
+
+   return splits_performed
