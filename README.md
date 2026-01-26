@@ -4,7 +4,7 @@ Autonomous knowledge organization system using multi-agent AI and hierarchical q
 
 ## Overview
 
-The Symposium Framework builds a self-organizing knowledge graph from unstructured documents (TSBs, papers, textbooks). Questions are extracted automatically, duplicates detected via circular dependency checking, and hierarchies emerge naturally from semantic similarity.
+The Symposium Framework builds a self-organizing knowledge graph from unstructured documents (tabular, papers, textbooks). Questions are extracted automatically, duplicates detected via circular dependency checking, and hierarchies emerge naturally from structural & semantic similarity.
 
 ## Installation
 ```bash
@@ -34,6 +34,7 @@ Cortex_v1/
 ├── graph.py             # Knowledge graph
 ├── extraction.py        # Question extraction & querying
 ├── loader.py            # Document loading
+├── classifier.py        # Domain classification
 ├── data/                # Your data files (not committed)
 ├── log/                 # Log files (not committed)
 └── output/              # Generated files (not committed)
@@ -43,7 +44,7 @@ Cortex_v1/
 
 - **Circular Dependency**: Two questions are duplicates if they point to the same underlying knowledge
 - **Directional Divergence**: Domains split when questions point in divergent directions in embedding space
-- **Hierarchical Self-Organization**: Parent-child relationships emerge from semantic similarity
+- **Hierarchical Self-Organization**: Parent-child relationships emerge from structural (question-answer pairs) & semantic similarity
 
 ## License
 
