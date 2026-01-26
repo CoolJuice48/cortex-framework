@@ -1,7 +1,9 @@
+# ------------------------------------------------------------------ #
+# Python imports
 import anthropic
 import json
 from typing import List
-
+# ------------------------------------------------------------------ #
 
 class DomainClassifier:
    def __init__(self, api_key: str):

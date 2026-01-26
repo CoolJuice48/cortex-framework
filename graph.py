@@ -1,9 +1,15 @@
+# ------------------------------------------------------------------ #
+# Cortex imports
 from structs import Document, Question, are_same_question, cosine_similarity
 from embed import Embedder
 from classifier import DomainClassifier
+# ------------------------------------------------------------------ #
+# Python imports
 from typing import Optional, List, Tuple
-import uuid
 import numpy as np
+import uuid
+import json
+# ------------------------------------------------------------------ #
 
 class KnowledgeGraph:
    def __init__(self, embedder: Embedder):
@@ -254,8 +260,8 @@ Uses an LLM to split domains into subdomains
 """
 def split_domain(
    graph: KnowledgeGraph,
-   domain_name: str="general",
-   classifier: DomainClassifier
+   classifier: DomainClassifier,
+   domain_name: str="general"
 ) -> List[str]:
    questions = [q for q in graph.questions.values() if domain_name in q.domains]
 
@@ -278,3 +284,27 @@ def split_domain(
    Example: ["automatic_transmission", "manual_transmission", "transmission_fluid"]
 
    Suggest subdomains now: (please and thank you!)"""
+
+   response = classifier.client.messages.create(
+      model="claude-sonnet-4-20250514",
+      max_tokens=300,
+      messages=[{"role": "user", "content": prompt}]
+   )
+   
+   # Parse response
+   try:
+      text = response.content[0].text.strip()
+      if "```json" in text:
+         start = text.find("```json") + 7
+         end = text.find("```", start)
+         text = text[start:end].strip()
+      elif "```" in text:
+         parts = text.split("```")
+         text = parts[1].strip()
+      
+      subdomains = json.loads(text)
+      return subdomains
+        
+   except Exception as e:
+      print(f"Error parsing subdomain response: {e}")
+      return [f"{domain_name}_1", f"{domain_name}_2"]  # Fallback

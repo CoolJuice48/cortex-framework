@@ -1,6 +1,9 @@
+# ------------------------------------------------------------------ #
+# Python imports
 from sentence_transformers import SentenceTransformer
 import numpy as np
 from typing import List
+# ------------------------------------------------------------------ #
 
 class Embedder:
    def __init__(self, model_name='all-mpnet-base-v2'):
