@@ -1,0 +1,43 @@
+# API Keys and secrets
+.env
+*.key
+config.py
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+
+# Logs
+log/
+*.log
+
+# Output files
+output/
+*.pkl
+*.pickle
+
+# Data files (too large for git)
+data/
+*.tsv
+*.csv
+*.txt
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Jupyter notebooks checkpoints
+.ipynb_checkpoints/
