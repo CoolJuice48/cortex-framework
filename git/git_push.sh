@@ -10,6 +10,9 @@ commit_message="Update structs.py, now includes Answer and Domain classes
 - HAVE NOT restructured existing class calls at this time"
 # ============================================
 
+echo "Pulling latest changes first..."
+git pull
+
 echo "Adding all changes..."
 git add .
 
