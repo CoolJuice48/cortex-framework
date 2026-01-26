@@ -277,7 +277,7 @@ class DocumentLoader:
       # List of existing questions
       all_questions = []
 
-      for doc in documents:
+      for i, doc in enumerate(documents, start=1):
          try:
             # Add document to graph
             graph.add_document(doc)
@@ -313,7 +313,7 @@ class DocumentLoader:
             )
 
             # STEP 3: Add new questions to graph, update nearby nodes
-            self.logger.info(f"\nProcessing: {doc.metadata.get('filename', doc.id)}")
+            self.logger.info(f"\nProcessing doc [{i}/{len(documents)}]: {doc.metadata.get('filename', doc.id)}")
             for q_text, answer_docs in questions:
                result = insert_question_smart(graph, q_text, answer_docs, domain)
                # Successful question addition
