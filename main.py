@@ -18,6 +18,13 @@ FILE_LIMIT = 20  # Number of TSBs to process
 ROW_LIMIT = 50   # Number of rows to process per document
 DOMAIN = "automotive"  # Start broad, not just transmission
 
+# Log file name
+TEST_NUM = "test2_"
+DATE     = "01-26-26_"
+TIME     = "01:05AM_"
+TAG      = "TSB"
+LOG_FILE = TEST_NUM + TIME + TAG + ".log"
+
 # =============================================================================
 # INITIALIZE
 # =============================================================================
@@ -28,7 +35,7 @@ graph = KnowledgeGraph(embedder)
 extractor = QuestionExtractor(API_KEY)
 loader = DocumentLoader(
    embedder,
-   log_file="tsb_test_run.log",
+   log_file=LOG_FILE,
    log_dir=LOG_DIR,
    output_dir=OUTPUT_DIR
 )
