@@ -4,6 +4,9 @@ from typing import List, Optional, Set
 import numpy as np
 import uuid
 
+"""
+A document, either a line of tabular data or full text file
+"""
 @dataclass
 class Document:
    id: str                                # uuid4(), used to find what question an answer references
@@ -11,29 +14,7 @@ class Document:
    embedding: Optional[np.ndarray]=None   # Embedded document
    metadata: dict=None                    # Source, date, author, etc.
 
-@dataclass
-class Question:
-   # TODO: INCLUDE ANSWERS
-   id: str                                # uuid4(), used to find what question an answer references
-   text: str                              # Raw text of question
-   embedding: Optional[np.ndarray]=None   # Embedded question
-   answer_documents: List[Document]=None  # Documents which answer the question TODO: CHANGE TO answers: List[Answer]=None
-   children: List['Question']=None        # List of follow-up questions
-   parents: List['Question']=None         # What this question is a follow-up to
-   neighbors: List['Question']=None       # NEW: Similar questions not directly related (uses answer_documents as a check)
-   domains: List[str]=None                # Which domains this question falls under
-   confidence: float=1.0                  # How confident the model is in the validity of the question
-
-   def __post_init__(self):
-      if self.answer_documents is None:
-         self.answer_documents = []       # TODO: Set implementation?
-      if self.children is None:
-         self.children = []               # TODO: Set implementation?
-      if self.parents is None:
-         self.parents = []                # TODO: Set implementation?
-      if self.domains is None:
-         self.domains = []                # TODO: Set implementation?
-
+""" An answer to one or more questions, supported by a document """
 @dataclass
 class Answer:
    question_id: List[str]                 # TODO: Must point to host question(s) IDs
@@ -46,6 +27,34 @@ class Answer:
       if self.answer_documents is None:
          self.answer_documents = []       # TODO: Set implementation?
 
+""" An LLM-generated question about a certain document """
+@dataclass
+class Question:
+   # TODO: INCLUDE ANSWERS
+   id: str=""                             # uuid4(), used to find what question an answer references
+   text: str=""                           # Raw text of question
+   embedding: Optional[np.ndarray]=None   # Embedded question
+   answers: List[Answer]=None             # Answers to the question
+   children: List['Question']=None        # List of follow-up questions
+   parents: List['Question']=None         # What this question is a follow-up to
+   neighbors: List['Question']=None       # NEW: Similar questions not directly related (uses answer_documents as a check)
+   domains: List[str]=None                # ßWhich domains this question falls under
+   confidence: float=1.0                  # How confident the model is in the validity of the question
+
+   def __post_init__(self):
+      if self.answer_documents is None:
+         self.answer_documents = []       # TODO: Set implementation?
+      if self.children is None:
+         self.children = []               # TODO: Set implementation?
+      if self.parents is None:
+         self.parents = []                # TODO: Set implementation?
+      if self.domains is None:
+         self.domains = []                # TODO: Set implementation?
+
+"""
+A domain of knowledge
+Graph{ Domain -> Set[Question] -> List[Answer] -> List[Document] }
+"""
 @dataclass
 class Domain:
    id: str                                # uuid4(), used to map new questions to existing domains
