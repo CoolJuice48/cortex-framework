@@ -1,34 +1,61 @@
-from dataclasses import dataclass
-from typing import List, Optional
-import numpy as np
 from embed import cosine_similarity
+from dataclasses import dataclass
+from typing import List, Optional, Set
+import numpy as np
+import uuid
 
 @dataclass
 class Document:
-   id: str
-   text: str
-   embedding: Optional[np.ndarray] = None
-   metadata: dict = None # Source, date, author, etc.
+   id: str                                # uuid4(), used to find what question an answer references
+   text: str                              # Raw text of document
+   embedding: Optional[np.ndarray]=None   # Embedded document
+   metadata: dict=None                    # Source, date, author, etc.
 
 @dataclass
 class Question:
-   text: str
-   embedding: Optional[np.ndarray] = None
-   answer_documents: List[Document] = None
-   children: List['Question'] = None
-   parents: List['Question'] = None
-   domains: List[str] = None
-   confidence: float = 1.0
+   # TODO: INCLUDE ANSWERS
+   id: str                                # uuid4(), used to find what question an answer references
+   text: str                              # Raw text of question
+   embedding: Optional[np.ndarray]=None   # Embedded question
+   answer_documents: List[Document]=None  # Documents which answer the question TODO: CHANGE TO answers: List[Answer]=None
+   children: List['Question']=None        # List of follow-up questions
+   parents: List['Question']=None         # What this question is a follow-up to
+   neighbors: List['Question']=None       # NEW: Similar questions not directly related (uses answer_documents as a check)
+   domains: List[str]=None                # Which domains this question falls under
+   confidence: float=1.0                  # How confident the model is in the validity of the question
 
    def __post_init__(self):
       if self.answer_documents is None:
-         self.answer_documents = []
+         self.answer_documents = []       # TODO: Set implementation?
       if self.children is None:
-         self.children = []
+         self.children = []               # TODO: Set implementation?
       if self.parents is None:
-         self.parents = []
+         self.parents = []                # TODO: Set implementation?
       if self.domains is None:
-         self.domains = []
+         self.domains = []                # TODO: Set implementation?
+
+@dataclass
+class Answer:
+   question_id: List[str]                 # TODO: Must point to host question(s) IDs
+   text: str                              # Raw text of question
+   embedding: Optional[np.ndarray]=None   # Embedded answer
+   answer_documents: List[Document]=None  # List of documents which support this answer
+   confidence: float=1.0                  # How confident the model is in the accuracy of the answer
+
+   def __post_init__(self):
+      if self.answer_documents is None:
+         self.answer_documents = []       # TODO: Set implementation?
+
+@dataclass
+class Domain:
+   id: str                                # uuid4(), used to map new questions to existing domains
+   name: str='general'                    # Domain name
+   questions: Set[Question]               # Set of questions, inherently deduplicates
+
+   def __init__(self, name: str, questions: Set[Question]):
+      self.id=uuid.uuid4()                # Create new ID
+      self.name = name                    # Name is as provided
+      self.questions = questions          # Questions are as provided (as a set)
 
 """
 Checks if two questions point to the same source knowledge

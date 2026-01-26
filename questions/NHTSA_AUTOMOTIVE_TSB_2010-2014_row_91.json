@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What date range is specified by 20090601: 20100930 in this service bulletin?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_91"
+    ]
+  },
+  {
+    "question": "What brake system type is mentioned for the FX35 vehicle model?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_91"
+    ]
+  },
+  {
+    "question": "What specific TPMS warning light behaviors are described for INFINITI vehicles?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_91"
+    ]
+  },
+  {
+    "question": "What axle configuration requires the V style brake chamber bracket replacement procedures?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_91"
+    ]
+  },
+  {
+    "question": "What two distinct technical classifications follow the SERVICE BRAKES, AIR designation?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_91"
+    ]
+  }
+]

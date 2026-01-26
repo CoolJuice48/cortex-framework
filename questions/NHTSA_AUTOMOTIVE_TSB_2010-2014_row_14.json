@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What Allison transmission series are mentioned as being affected by the shifting problem?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_14"
+    ]
+  },
+  {
+    "question": "What does the monitor display show when 'D' is selected during the transmission malfunction?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_14"
+    ]
+  },
+  {
+    "question": "What type of mounting configuration is specified for the shifter in affected Kenworth chassis?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_14"
+    ]
+  },
+  {
+    "question": "What specific axle component type is covered by the Meritor replacement procedures?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_14"
+    ]
+  },
+  {
+    "question": "What powertrain system category is associated with the automatic transmission issue?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_14"
+    ]
+  }
+]

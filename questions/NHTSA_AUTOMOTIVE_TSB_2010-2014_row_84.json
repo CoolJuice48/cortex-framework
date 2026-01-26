@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What is the date range specified as 20090601: 20100930 in this service bulletin?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_84"
+    ]
+  },
+  {
+    "question": "What vehicle model FX is associated with INFINITI in this document?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_84"
+    ]
+  },
+  {
+    "question": "What year 2005 corresponds to the code 9999 in the vehicle classification system?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_84"
+    ]
+  },
+  {
+    "question": "What specific brake chamber style requires bracket replacement procedures according to Meritor instructions?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_84"
+    ]
+  },
+  {
+    "question": "What does the document classification 'Service Bulletin/Repair Instructions' indicate about the type of technical procedures contained in this bulletin?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_84"
+    ]
+  }
+]

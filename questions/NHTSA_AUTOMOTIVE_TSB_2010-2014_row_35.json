@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What date range is specified by the codes 20090601 through 20091201?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_35"
+    ]
+  },
+  {
+    "question": "What floor height specification is shared by both the D60LF and the 40FT/60FT bus models?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_35"
+    ]
+  },
+  {
+    "question": "What brake chamber bracket style is being replaced according to the Meritor procedures?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_35"
+    ]
+  },
+  {
+    "question": "What year appears with the code 9999 in the document specifications?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_35"
+    ]
+  },
+  {
+    "question": "What type of document format contains both the Meritor trailer axle and New Flyer alternator procedures?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_35"
+    ]
+  }
+]

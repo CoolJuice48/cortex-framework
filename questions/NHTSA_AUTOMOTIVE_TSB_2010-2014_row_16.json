@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What specific mounting location distinguishes the affected Kenworth transmission systems from those that are not affected?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_16"
+    ]
+  },
+  {
+    "question": "What numerical code sequence corresponds to the date range 20090601: 20090930?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_16"
+    ]
+  },
+  {
+    "question": "What brake system category encompasses both service brakes and power train components according to the document classification?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_16"
+    ]
+  },
+  {
+    "question": "What happens when the automatic transmission will not shift properly but maintains normal warning lamp status?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_16"
+    ]
+  },
+  {
+    "question": "What axle type specification requires the V-style brake chamber bracket replacement procedures?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_16"
+    ]
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What specific years span the period referenced by codes 20090601 to 20090930?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_17"
+    ]
+  },
+  {
+    "question": "Which Allison transmission series models are specifically identified as having the shifting malfunction?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_17"
+    ]
+  },
+  {
+    "question": "What document classification system uses both TB-TP-09132 and TIB-26-18 designations?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_17"
+    ]
+  },
+  {
+    "question": "What axle configuration is specified for the Meritor brake chamber bracket replacement procedures?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_17"
+    ]
+  },
+  {
+    "question": "What dashboard display behavior indicates a transmission shifting problem in the affected Kenworth vehicles?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_17"
+    ]
+  }
+]

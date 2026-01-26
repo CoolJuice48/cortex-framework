@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What are the document identification numbers that precede the TB-TP-09132 reference?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_62"
+    ]
+  },
+  {
+    "question": "What date range is specified by 20100104: 20100105 in this service bulletin?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_62"
+    ]
+  },
+  {
+    "question": "What alternative reference number is given for TB-TP-09132?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_62"
+    ]
+  },
+  {
+    "question": "What document type classification applies to both the Meritor and Nissan procedures?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_62"
+    ]
+  },
+  {
+    "question": "What date span is indicated by 20090601: 20091016 in the bulletin header?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_62"
+    ]
+  }
+]

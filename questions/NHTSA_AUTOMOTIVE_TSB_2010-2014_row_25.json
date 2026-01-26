@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What date range is represented by the code pair 10031024: 10031124?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_25"
+    ]
+  },
+  {
+    "question": "What two system categories are listed under 'SERVICE BRAKES, AIR: ELECTRICAL SYSTEM:SOFTWARE'?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_25"
+    ]
+  },
+  {
+    "question": "What is the full company name that appears in parentheses after MERITOR?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_25"
+    ]
+  },
+  {
+    "question": "What abbreviation follows both the Meritor and Nissan procedure descriptions?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_25"
+    ]
+  },
+  {
+    "question": "What is the alternative DTC code description given for C1163?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_25"
+    ]
+  }
+]

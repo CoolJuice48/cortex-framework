@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What is the date range specified as 20090601: 20100930 in this service bulletin?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_94"
+    ]
+  },
+  {
+    "question": "What specific brake component type is mentioned alongside CAM BRAKE in the Meritor section?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_94"
+    ]
+  },
+  {
+    "question": "What vehicle system category is listed as SERVICE BRAKES, AIR in this document?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_94"
+    ]
+  },
+  {
+    "question": "What are the complete date sequences that begin with 20100104 in this service bulletin?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_94"
+    ]
+  },
+  {
+    "question": "What brake chamber style is specifically mentioned in the Meritor trailer axle procedure?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_94"
+    ]
+  }
+]

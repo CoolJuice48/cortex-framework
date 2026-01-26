@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What types of brake systems are covered in this service bulletin?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_1"
+    ]
+  },
+  {
+    "question": "Which vehicle manufacturers are mentioned in this document?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_1"
+    ]
+  },
+  {
+    "question": "What specific procedure does Meritor provide for trailer axles?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_1"
+    ]
+  },
+  {
+    "question": "What electronic issue may affect Ford/Mercury brake control modules?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_1"
+    ]
+  },
+  {
+    "question": "What component in the 14290 wiring harness may experience electronic noise?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_1"
+    ]
+  }
+]

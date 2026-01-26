@@ -218,7 +218,7 @@ def analyze_domain_coherence(
    # Check: Minimum size to split
    if len(questions) < 10:
       return {
-         'Should split': False,
+         'should_split': False,
          'Reason': 'insufficient_data'
       }
 
@@ -231,7 +231,7 @@ def analyze_domain_coherence(
    
    if len(directions) < 2:
       return {
-         'Should split': False,
+         'should_split': False,
          'Reason': 'insufficient_data'
       }
    

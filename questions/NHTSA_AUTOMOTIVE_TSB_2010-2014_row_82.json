@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What date range is specified by 20090601: 20100930 in this service bulletin?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_82"
+    ]
+  },
+  {
+    "question": "What specific brake system component style is being replaced in the Meritor procedure?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_82"
+    ]
+  },
+  {
+    "question": "What warning light status indicates a tire pressure monitoring system issue in INFINITI vehicles?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_82"
+    ]
+  },
+  {
+    "question": "What type of axle configuration requires the V style brake chamber bracket replacement?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_82"
+    ]
+  },
+  {
+    "question": "What document classification appears twice in the Service Bulletin/Repair Instructions field?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_82"
+    ]
+  }
+]

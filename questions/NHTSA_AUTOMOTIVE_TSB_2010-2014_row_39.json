@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What date ranges are specified in the document coding system at the beginning of the bulletin?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_39"
+    ]
+  },
+  {
+    "question": "What V-style component is being replaced according to the Meritor procedure?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_39"
+    ]
+  },
+  {
+    "question": "What year specification corresponds with the 9999 code in the document header?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_39"
+    ]
+  },
+  {
+    "question": "What type of chamber brackets are being replaced in the Meritor trailer axle procedure?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_39"
+    ]
+  },
+  {
+    "question": "What specific support component is being installed in the New Flyer electrical system procedure?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_39"
+    ]
+  }
+]

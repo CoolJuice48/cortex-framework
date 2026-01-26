@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What is the approximate number of vehicles involved in the Mack Trucks turbocharger replacement campaign?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_67"
+    ]
+  },
+  {
+    "question": "What specific engine type is equipped on the vehicles requiring turbocharger replacement and software update?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_67"
+    ]
+  },
+  {
+    "question": "What mounting hardware must be changed along with the turbocharger in the Mack Trucks campaign?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_67"
+    ]
+  },
+  {
+    "question": "What type of brake chamber brackets are being replaced in the Meritor procedure?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_67"
+    ]
+  },
+  {
+    "question": "What authorization has been given regarding the turbocharger replacement campaign?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_67"
+    ]
+  }
+]

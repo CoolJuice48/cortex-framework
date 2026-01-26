@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What date range is specified by the codes 20100104: 20100105?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_40"
+    ]
+  },
+  {
+    "question": "What year value is associated with the code 9999 in this service bulletin?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_40"
+    ]
+  },
+  {
+    "question": "What is the complete date range indicated by 20090601: 20091201?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_40"
+    ]
+  },
+  {
+    "question": "What document identifier corresponds to TB-TP-09132 in this bulletin?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_40"
+    ]
+  },
+  {
+    "question": "What date sequence is represented by 10031024: 10031204?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_40"
+    ]
+  }
+]

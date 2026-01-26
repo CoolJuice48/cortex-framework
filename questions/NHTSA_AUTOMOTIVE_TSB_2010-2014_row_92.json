@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What date range is specified by 20090601: 20100930 in this service bulletin?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_92"
+    ]
+  },
+  {
+    "question": "What specific INFINITI vehicle model FX45 is associated with cam brake systems?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_92"
+    ]
+  },
+  {
+    "question": "What type of brake chamber brackets are being replaced according to the Meritor procedure?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_92"
+    ]
+  },
+  {
+    "question": "What warning light behaviors are described for the tire pressure monitoring system malfunction?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_92"
+    ]
+  },
+  {
+    "question": "What is the complete date sequence from 20100104: 20100105 in the document coding?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_92"
+    ]
+  }
+]

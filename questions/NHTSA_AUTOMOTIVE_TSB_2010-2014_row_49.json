@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What is the date range represented by 20100104: 20100105 in this service bulletin?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_49"
+    ]
+  },
+  {
+    "question": "What brake chamber bracket style is being replaced according to the Meritor procedure?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_49"
+    ]
+  },
+  {
+    "question": "What date period is indicated by 20090601: 20091201 in this document?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_49"
+    ]
+  },
+  {
+    "question": "What specific axle type requires the V style brake chamber bracket replacement procedure?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_49"
+    ]
+  },
+  {
+    "question": "What model designation D40LF is associated with in the CAM BRAKE category?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_49"
+    ]
+  }
+]

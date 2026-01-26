@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What date code corresponds to 20100104 in this document?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_8"
+    ]
+  },
+  {
+    "question": "What is the ending date in the range that corresponds to code 20090601?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_8"
+    ]
+  },
+  {
+    "question": "What brake component type is specifically mentioned for Ford Fusion vehicles?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_8"
+    ]
+  },
+  {
+    "question": "What numerical code is associated with the year 2010 in this service bulletin?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_8"
+    ]
+  },
+  {
+    "question": "What secondary classification appears alongside 'SERVICE BRAKES, AIR' in the brake system categories?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_8"
+    ]
+  }
+]

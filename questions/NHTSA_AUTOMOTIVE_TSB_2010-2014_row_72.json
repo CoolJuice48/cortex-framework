@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What are the two different document identification numbers that appear at the beginning of this service bulletin?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_72"
+    ]
+  },
+  {
+    "question": "What date range spans from 20090601 to 20100930 in this document?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_72"
+    ]
+  },
+  {
+    "question": "What specific INFINITI vehicle model is associated with the tire pressure monitoring system issue?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_72"
+    ]
+  },
+  {
+    "question": "What year designation is represented by the code 2007 in this service bulletin?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_72"
+    ]
+  },
+  {
+    "question": "When was this document last updated according to the information provided?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_72"
+    ]
+  }
+]

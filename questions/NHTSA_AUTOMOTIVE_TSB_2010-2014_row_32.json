@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What is the document reference number associated with ITS-4086?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_32"
+    ]
+  },
+  {
+    "question": "What date range spans from 20090601 in this service bulletin?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_32"
+    ]
+  },
+  {
+    "question": "What type of document classification describes both procedures in this bulletin?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_32"
+    ]
+  },
+  {
+    "question": "What are the two main manufacturers featured in this combined service bulletin?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_32"
+    ]
+  },
+  {
+    "question": "What axle configuration code appears alongside CAM BRAKE in the Meritor section?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_32"
+    ]
+  }
+]

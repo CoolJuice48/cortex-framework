@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What is the date range represented by 20100104: 20100105?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_44"
+    ]
+  },
+  {
+    "question": "What year specification is associated with the code 9999 in this service bulletin?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_44"
+    ]
+  },
+  {
+    "question": "What type of brake chamber brackets are being replaced according to the Meritor procedure?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_44"
+    ]
+  },
+  {
+    "question": "What bus lengths are included in the New Flyer alternator support bracket installation?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_44"
+    ]
+  },
+  {
+    "question": "What two major vehicle systems categories are addressed in this combined service bulletin?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_44"
+    ]
+  }
+]

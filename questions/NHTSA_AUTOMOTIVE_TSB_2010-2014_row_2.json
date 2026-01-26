@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What is the service bulletin number referenced in this document?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_2"
+    ]
+  },
+  {
+    "question": "What year range is associated with the Mercury Milan vehicles mentioned?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_2"
+    ]
+  },
+  {
+    "question": "What type of brake chamber brackets are being replaced according to the Meritor procedures?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_2"
+    ]
+  },
+  {
+    "question": "What specific wiring harness is mentioned in connection with the Ford/Mercury brake control module issue?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_2"
+    ]
+  },
+  {
+    "question": "Are there any model or model year restrictions listed for the Meritor trailer axle procedures?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_2"
+    ]
+  }
+]

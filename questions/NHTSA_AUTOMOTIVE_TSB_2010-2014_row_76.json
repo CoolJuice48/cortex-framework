@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What is the document number TB-TP-09132 associated with?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_76"
+    ]
+  },
+  {
+    "question": "What date range spans from 20090601 to 20100930 in this service bulletin?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_76"
+    ]
+  },
+  {
+    "question": "What specific brake chamber bracket style is being replaced in the Meritor procedure?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_76"
+    ]
+  },
+  {
+    "question": "What does the warning light condition 'ON/BLINKING' indicate for the INFINITI tire pressure monitoring system?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_76"
+    ]
+  },
+  {
+    "question": "What two distinct vehicle system categories are covered under 'SERVICE BRAKES, AIR' and 'TIRES:PRESSURE MONITORING AND REGULATING SYSTEMS'?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_76"
+    ]
+  }
+]

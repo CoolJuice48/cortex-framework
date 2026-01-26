@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What document type classification is used for these repair instructions?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_3"
+    ]
+  },
+  {
+    "question": "Which axle manufacturer's products are affected by the brake chamber bracket replacement procedures?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_3"
+    ]
+  },
+  {
+    "question": "What specific circuit experiences electronic noise issues in the affected Ford/Mercury vehicles?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_3"
+    ]
+  },
+  {
+    "question": "Are there model or model year restrictions specified for the Meritor trailer axle procedures?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_3"
+    ]
+  },
+  {
+    "question": "What abbreviation is used to denote the Ford/Mercury electronic noise issue in this bulletin?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_3"
+    ]
+  }
+]

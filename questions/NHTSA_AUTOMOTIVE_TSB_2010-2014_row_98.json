@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What date range is specified by 20090601: 20100930 in this service bulletin?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_98"
+    ]
+  },
+  {
+    "question": "What type of brake system configuration is mentioned for EX35 vehicles?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_98"
+    ]
+  },
+  {
+    "question": "Which specific brake chamber style is being replaced according to the Meritor procedure?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_98"
+    ]
+  },
+  {
+    "question": "What date corresponds to 20100104: 20100105 in the document sequence?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_98"
+    ]
+  },
+  {
+    "question": "What warning light condition is described for INFINITI TPMS systems besides being on?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_98"
+    ]
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What is the date range specified as 20090601: 20100930 in this service bulletin?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_89"
+    ]
+  },
+  {
+    "question": "What type of brake system component requires bracket replacement procedures according to Meritor?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_89"
+    ]
+  },
+  {
+    "question": "What vehicle system category is listed as 'CAM BRAKE: FX' in the document coding?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_89"
+    ]
+  },
+  {
+    "question": "What are the two main manufacturers referenced in the MERITOR: INFINITI pairing?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_89"
+    ]
+  },
+  {
+    "question": "What specific brake chamber style is mentioned in the Meritor replacement procedures?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_89"
+    ]
+  }
+]

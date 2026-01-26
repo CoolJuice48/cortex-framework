@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What date range is specified by 20090601: 20100930 in this service bulletin?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_83"
+    ]
+  },
+  {
+    "question": "What specific brake system component style is being replaced according to the Meritor procedures?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_83"
+    ]
+  },
+  {
+    "question": "What vehicle system warning behavior is described for INFINITI vehicles besides just being on?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_83"
+    ]
+  },
+  {
+    "question": "What two document classification codes are linked by TB-TP-09132: ITB-09-050?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_83"
+    ]
+  },
+  {
+    "question": "What date sequence follows the pattern 20100104: 20100105 in the document structure?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_83"
+    ]
+  }
+]

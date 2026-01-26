@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What is the relationship between the date codes 20100104 and their corresponding values in this service bulletin?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_22"
+    ]
+  },
+  {
+    "question": "Which brake system classifications are mentioned in the SERVICE BRAKES, AIR category?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_22"
+    ]
+  },
+  {
+    "question": "What does the abbreviation VDC stand for in the context of the Nissan control unit mentioned?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_22"
+    ]
+  },
+  {
+    "question": "What is the C1163 diagnostic trouble code's full description as it appears in this document?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_22"
+    ]
+  },
+  {
+    "question": "How many distinct manufacturer pairs are represented across all the service procedures described?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_22"
+    ]
+  }
+]

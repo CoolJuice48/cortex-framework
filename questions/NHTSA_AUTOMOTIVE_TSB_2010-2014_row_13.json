@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What type of shifter configuration is NOT affected by the Kenworth automatic transmission issue?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_13"
+    ]
+  },
+  {
+    "question": "What are the two specific Allison transmission series models that experience shifting problems in Kenworth vehicles?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_13"
+    ]
+  },
+  {
+    "question": "What visual symptom occurs when the transmission select and monitor displays disagree in the described Kenworth problem?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_13"
+    ]
+  },
+  {
+    "question": "What happens to the check transmission warning lamp during the shifting malfunction described for Kenworth vehicles?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_13"
+    ]
+  },
+  {
+    "question": "What specific mounting location distinguishes the affected shifters from the unaffected ones in the Kenworth transmission issue?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_13"
+    ]
+  }
+]

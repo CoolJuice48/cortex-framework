@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What is the date range from 20090601 to what end date mentioned in the document?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_54"
+    ]
+  },
+  {
+    "question": "What brake chamber bracket style is being replaced according to the Meritor procedure?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_54"
+    ]
+  },
+  {
+    "question": "What are the two main system categories that encompass both service brake air systems and electrical alternator components?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_54"
+    ]
+  },
+  {
+    "question": "What specific low floor bus model designation begins with 'D40' in this service bulletin?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_54"
+    ]
+  },
+  {
+    "question": "What date sequence corresponds to the pattern 20100104: 20100105 in the document's coding system?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_54"
+    ]
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What is the specific date range represented by the code sequence 20090601: 20091005?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_24"
+    ]
+  },
+  {
+    "question": "Which vehicle manufacturer is paired with the XTERRA model in this service bulletin?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_24"
+    ]
+  },
+  {
+    "question": "What type of brake system classification includes both SERVICE BRAKES, AIR and ANTILOCK designations?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_24"
+    ]
+  },
+  {
+    "question": "What year is associated with the numerical code 9999 in the document structure?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_24"
+    ]
+  },
+  {
+    "question": "What are the two specific DTC codes that trigger the need for ABS/VDC control unit software reprogramming?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_24"
+    ]
+  }
+]

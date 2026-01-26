@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What tire-related system issue is described for INFINITI vehicles in this service bulletin?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_70"
+    ]
+  },
+  {
+    "question": "What does the document number ITB-09-050 correspond to in this service bulletin?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_70"
+    ]
+  },
+  {
+    "question": "What specific warning light behavior is mentioned for the INFINITI tire pressure monitoring system?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_70"
+    ]
+  },
+  {
+    "question": "What date range is indicated by 20090601: 20100930 in this document?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_70"
+    ]
+  },
+  {
+    "question": "When was this service bulletin last updated according to the document?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_70"
+    ]
+  }
+]

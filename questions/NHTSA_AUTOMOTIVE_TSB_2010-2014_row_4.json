@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What date range corresponds to the code 20090601 in this document?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_4"
+    ]
+  },
+  {
+    "question": "Are there specific model years listed for the Meritor trailer axle brake chamber bracket procedures?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_4"
+    ]
+  },
+  {
+    "question": "What style of brake chamber brackets are being replaced as the standard according to Meritor?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_4"
+    ]
+  },
+  {
+    "question": "What two different brake system types are referenced in the air and electric brake categories?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_4"
+    ]
+  },
+  {
+    "question": "What is the significance of the *PE designation that appears after both the Meritor and Ford/Mercury sections?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_4"
+    ]
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What Volvo engine models are covered by the camshaft sensor replacement guidelines?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_27"
+    ]
+  },
+  {
+    "question": "What type of sensor replacement procedure is described for Volvo trucks in this bulletin?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_27"
+    ]
+  },
+  {
+    "question": "What engine system category is paired with SERVICE BRAKES, AIR in the document classification?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_27"
+    ]
+  },
+  {
+    "question": "What specific engine cooling system designation appears in the ENGINE AND ENGINE COOLING section?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_27"
+    ]
+  },
+  {
+    "question": "Which truck manufacturer is associated with both CAM BRAKE and the camshaft sensor replacement procedures?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_27"
+    ]
+  }
+]

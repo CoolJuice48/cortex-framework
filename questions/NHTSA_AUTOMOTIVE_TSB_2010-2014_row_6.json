@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What is the TSB number that corresponds to TB-TP-09132?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_6"
+    ]
+  },
+  {
+    "question": "What date range does the code 20100104 represent in this document?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_6"
+    ]
+  },
+  {
+    "question": "Which specific brake component categories are listed under 'SERVICE BRAKES, AIR' and 'SERVICE BRAKES, HYDRAULIC'?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_6"
+    ]
+  },
+  {
+    "question": "What is the ending date that corresponds to code 20090601 in the document?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_6"
+    ]
+  },
+  {
+    "question": "What brake style is specifically mentioned in the Meritor brake chamber bracket replacement procedures?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_6"
+    ]
+  }
+]

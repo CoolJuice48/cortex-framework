@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What type of display disagreement occurs between select and monitor functions in the Kenworth transmission issue?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_20"
+    ]
+  },
+  {
+    "question": "What brake system classification encompasses both air brakes and automatic transmissions according to this document?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_20"
+    ]
+  },
+  {
+    "question": "What are the complete date ranges represented by the numerical codes at the beginning of the document?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_20"
+    ]
+  },
+  {
+    "question": "What transmission behavior problem occurs without triggering any warning lamp illumination in Kenworth vehicles?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_20"
+    ]
+  },
+  {
+    "question": "What distinguishes the affected Kenworth chassis from those with floor mounted shift towers?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_20"
+    ]
+  }
+]

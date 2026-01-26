@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What is the root cause of the oil leak issue described in the Peterbilt transmission problem?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_9"
+    ]
+  },
+  {
+    "question": "What are the consequences or severity level of the fluid leak mentioned in the Peterbilt oil slinger issue?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_9"
+    ]
+  },
+  {
+    "question": "What is the incorrect thread direction found on the Peterbilt input shaft oil slinger?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_9"
+    ]
+  },
+  {
+    "question": "Where specifically does the fluid leak occur in relation to the transmission components?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_9"
+    ]
+  },
+  {
+    "question": "What type of failures does the document state will NOT occur due to the oil slinger leak?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_9"
+    ]
+  }
+]

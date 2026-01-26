@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What are the document ID numbers that appear at the beginning of this service bulletin?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_63"
+    ]
+  },
+  {
+    "question": "What date range is specified by 20090601: 20091016 in this document?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_63"
+    ]
+  },
+  {
+    "question": "What two main vehicle types are covered by the procedures described in this service bulletin?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_63"
+    ]
+  },
+  {
+    "question": "What specific motor assembly replacement procedure is outlined for Nissan vehicles?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_63"
+    ]
+  },
+  {
+    "question": "What brake chamber bracket style is being replaced according to the Meritor procedure?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_63"
+    ]
+  }
+]

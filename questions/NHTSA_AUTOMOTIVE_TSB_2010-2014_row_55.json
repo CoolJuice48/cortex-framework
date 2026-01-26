@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What is the relationship between service bulletin codes 10031024 and 10031204?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_55"
+    ]
+  },
+  {
+    "question": "What date range spans from 20090601 to 20091201 in this service bulletin?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_55"
+    ]
+  },
+  {
+    "question": "What are the two main vehicle system categories that this combined service bulletin addresses?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_55"
+    ]
+  },
+  {
+    "question": "What is the significance of the ITS-4086 reference code in relation to TB-TP-09132?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_55"
+    ]
+  },
+  {
+    "question": "What brake chamber bracket style is being replaced according to the Meritor procedure?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_55"
+    ]
+  }
+]

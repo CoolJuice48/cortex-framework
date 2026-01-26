@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What date range is specified by the codes 20090601: 20100930?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_73"
+    ]
+  },
+  {
+    "question": "What are the two manufacturer names that appear after the colon following MERITOR?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_73"
+    ]
+  },
+  {
+    "question": "What vehicle model is associated with G37 in this service bulletin?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_73"
+    ]
+  },
+  {
+    "question": "What are the two main technical system categories listed under SERVICE BRAKES, AIR?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_73"
+    ]
+  },
+  {
+    "question": "What specific V style component replacement procedure is described for all Meritor trailer axles?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_73"
+    ]
+  }
+]

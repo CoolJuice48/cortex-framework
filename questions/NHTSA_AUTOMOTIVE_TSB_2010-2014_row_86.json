@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What is the date range specified as 20090601: 20100930 in this service bulletin?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_86"
+    ]
+  },
+  {
+    "question": "What specific brake chamber style is being replaced according to the Meritor procedures?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_86"
+    ]
+  },
+  {
+    "question": "What vehicle model Q45 is associated with which manufacturer in this document?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_86"
+    ]
+  },
+  {
+    "question": "What two technical system categories are separated by the colon in 'SERVICE BRAKES, AIR: TIRES:PRESSURE MONITORING AND REGULATING SYSTEMS'?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_86"
+    ]
+  },
+  {
+    "question": "What identifier code sequence corresponds to TB-TP-09132: ITB-09-050?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_86"
+    ]
+  }
+]

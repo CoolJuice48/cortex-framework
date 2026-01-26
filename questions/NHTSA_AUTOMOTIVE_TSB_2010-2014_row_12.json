@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What is the relationship between the date codes 20100104 and their corresponding values in this document?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_12"
+    ]
+  },
+  {
+    "question": "What category classification encompasses both the Meritor and Kenworth issues described in this bulletin?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_12"
+    ]
+  },
+  {
+    "question": "What numerical code corresponds to the year 2009 in this service document?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_12"
+    ]
+  },
+  {
+    "question": "How many different company/manufacturer pairs are referenced in the main content of this bulletin?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_12"
+    ]
+  },
+  {
+    "question": "What equipment specification appears with the value 9999 in the document coding system?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_12"
+    ]
+  }
+]

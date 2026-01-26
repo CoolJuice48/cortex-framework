@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What is the document reference number TB-TP-09132 associated with?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_60"
+    ]
+  },
+  {
+    "question": "What date range is specified by 20090601: 20091201 in this service bulletin?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_60"
+    ]
+  },
+  {
+    "question": "What brake chamber component category falls under SERVICE BRAKES, AIR:DRUM:CHAMBER?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_60"
+    ]
+  },
+  {
+    "question": "What type of axles require the standard V style brake chamber bracket replacement procedures?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_60"
+    ]
+  },
+  {
+    "question": "What specific tube component is installed for New Flyer rear brake chamber push rod systems?",
+    "answer_doc_ids": [
+      "NHTSA_AUTOMOTIVE_TSB_2010-2014_row_60"
+    ]
+  }
+]

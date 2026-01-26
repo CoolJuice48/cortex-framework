@@ -8,7 +8,7 @@ from classifier import DomainClassifier
 # ------------------------------------------------------------------ #
 # Python imports
 from pathlib import Path
-from typing import List, Optional, Callable
+from typing import List, Optional, Callable, Tuple
 from datetime import datetime
 import pickle
 import os
@@ -27,12 +27,18 @@ class DocumentLoader:
          log_file: str=None,
          log_dir: str='log',
          output_dir: str='output',
+         embeddings_dir: str='embeddings',
+         questions_dir: str='questions'
       ):
       self.embedder = embedder
       self.output_dir = output_dir
+      self.embeddings_dir = embeddings_dir
+      self.questions_dir = questions_dir
 
       os.makedirs(output_dir, exist_ok=True)
       os.makedirs(log_dir, exist_ok=True)
+      os.makedirs(embeddings_dir, exist_ok=True)
+      os.makedirs(questions_dir, exist_ok=True)
 
       if log_file is None:
          log_file = f"ingestion_{datetime.now().strftime('%Y%m%d_%H%M')}.log"
@@ -297,7 +303,7 @@ class DocumentLoader:
             self.logger.info(f"  Identified domains: {', '.join(doc_domains)}")
 
             # STEP ONE: Check if this doc answers existing questions
-            existing_answered = []
+            existing_answered = [] # TODO: CHANGE TO A SET FOR AUTO DEDUPING
             for domain in doc_domains:
                # Optimize, only check questions in the same domain
                relevant_questions = [
@@ -351,7 +357,7 @@ class DocumentLoader:
    
    """ Save document embeddings to output directory"""
    def save_embeddings(self, documents: List[Document], filename: str="embeddings.pkl") -> None:
-      output_path = os.path.join(self.output_dir, filename)
+      output_path = os.path.join(self.embeddings_dir, filename)
 
       # Save just the embeddings and IDs, less data
       embedding_data = {
@@ -370,7 +376,7 @@ class DocumentLoader:
 
    """ Load saved document embeddings """
    def load_embeddings(self, filename: str="embeddings.pkl") -> dict:
-      output_path = os.path.join(self.output_dir, filename)
+      output_path = os.path.join(self.embeddings_dir, filename)
 
       if not os.path.exists(output_path):
          self.logger.warning(f"No saved embeddings found at {output_path}")
@@ -381,3 +387,43 @@ class DocumentLoader:
          embedding_data = pickle.load(f)
 
       return embedding_data
+   
+   """Save extracted questions for a document"""
+   def save_questions_cache(self, doc_id: str, questions: List[Tuple[str, List[Document]]]):
+      cache_path = os.path.join(self.questions_dir, f"{doc_id}.json")
+      
+      # Convert to JSON-serializable format
+      cache_data = [
+         {
+            'question': q_text,
+            'answer_doc_ids': [doc.id for doc in answer_docs]
+         }
+         for q_text, answer_docs in questions
+      ]
+      
+      with open(cache_path, 'w') as f:
+         json.dump(cache_data, f, indent=2)
+   
+   """Load cached questions for a document"""
+   def load_questions_cache(self, doc_id: str, all_documents: dict) -> Optional[List[Tuple[str, List[Document]]]]:
+      cache_path = os.path.join(self.questions_dir, f"{doc_id}.json")
+      
+      if not os.path.exists(cache_path):
+         return None
+      
+      try:
+         with open(cache_path, 'r') as f:
+            cache_data = json.load(f)
+         
+         # Reconstruct questions with Document objects
+         questions = []
+         for item in cache_data:
+            q_text = item['question']
+            answer_docs = [all_documents[doc_id] for doc_id in item['answer_doc_ids'] if doc_id in all_documents]
+            questions.append((q_text, answer_docs))
+      
+         return questions
+         
+      except Exception as e:
+         self.logger.warning(f"Failed to load question cache for {doc_id}: {e}")
+         return None
