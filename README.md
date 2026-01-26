@@ -1,6 +1,6 @@
 # Cortex Framework
 
-Autonomous knowledge organization system using multi-agent AI and hierarchical question graphs.
+Autonomous knowledge organization system using multiple LLM calls and hierarchical question graphs.
 
 ## Overview
 
@@ -48,4 +48,4 @@ Cortex_v1/
 
 ## License
 
-MIT
+OptIn, L.L.C.
