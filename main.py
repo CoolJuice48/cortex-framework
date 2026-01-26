@@ -3,6 +3,7 @@ from graph import KnowledgeGraph
 from extraction import QuestionExtractor
 from loader import DocumentLoader
 from config import API_KEY
+from datetime import datetime
 import os
 
 # =============================================================================
@@ -19,11 +20,11 @@ ROW_LIMIT = 50   # Number of rows to process per document
 DOMAIN = "automotive"  # Start broad, not just transmission
 
 # Log file name
-TEST_NUM = "test2_"
-DATE     = "01-26-26_"
-TIME     = "01:05AM_"
-TAG      = "TSB"
-LOG_FILE = TEST_NUM + TIME + TAG + ".log"
+TEST_NUM = "test2"
+TAG = "TSB"
+TIMESTAMP = datetime.now().strftime('%m-%d-%y_%I:%M%p')  # Auto-generates
+LOG_FILE = f"{TEST_NUM}_{TIMESTAMP}_{TAG}.log"
+# Result: "test2_01-26-26_01:05AM_TSB.log"
 
 # =============================================================================
 # INITIALIZE
@@ -151,4 +152,4 @@ with open(graph_path, 'wb') as f:
    pickle.dump(graph, f)
 print(f"Saved graph to: {graph_path}")
 
-print(f"\nDone! Check {LOG_DIR}/tsb_test_run.log for details.")
+print(f"\nDone! Check {LOG_DIR}/{LOG_FILE}.log for details.")
