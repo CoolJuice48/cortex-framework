@@ -4,7 +4,7 @@ Autonomous knowledge organization system using multi-agent AI and hierarchical q
 
 ## Overview
 
-The Symposium Framework builds a self-organizing knowledge graph from unstructured documents (tabular, papers, textbooks). Questions are extracted automatically, duplicates detected via circular dependency checking, and hierarchies emerge naturally from structural & semantic similarity.
+The Cortex Framework builds a self-organizing knowledge graph from unstructured documents (tabular, papers, textbooks). Questions are extracted automatically, duplicates detected via circular dependency checking, and hierarchies emerge naturally from structural & semantic similarity.
 
 ## Installation
 ```bash
