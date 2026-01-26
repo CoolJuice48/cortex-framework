@@ -1,4 +1,4 @@
-# Symposium Framework
+# Cortex Framework
 
 Autonomous knowledge organization system using multi-agent AI and hierarchical question graphs.
 
