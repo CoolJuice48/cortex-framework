@@ -1,5 +1,6 @@
 from embed import cosine_similarity
-from dataclasses import dataclass
+from classifier import DomainClassifier
+from dataclasses import dataclass, field
 from typing import List, Optional, Set
 import numpy as np
 import uuid
@@ -17,54 +18,49 @@ class Document:
 """ An answer to one or more questions, supported by a document """
 @dataclass
 class Answer:
-   question_id: List[str]                 # TODO: Must point to host question(s) IDs
-   text: str                              # Raw text of question
-   embedding: Optional[np.ndarray]=None   # Embedded answer
-   answer_documents: List[Document]=None  # List of documents which support this answer
-   confidence: float=1.0                  # How confident the model is in the accuracy of the answer
+   id: str=field(default_factory=lambda: str(uuid.uuid4()))
+   text: str=""                                                  # Raw text of question
+   embedding: Optional[np.ndarray]=None                          # Embedded answer
+   source_documents: List[Document]=field(default_factory=list)  # List of documents which support this answer
+   confidence: float=1.0                                         # How confident the model is in the accuracy of the answer
 
-   def __post_init__(self):
-      if self.answer_documents is None:
-         self.answer_documents = []       # TODO: Set implementation?
+   # Which questions does this answer?
+   question_ids: Set[str] = field(default_factory=set)            # Use set for deduplication
 
 """ An LLM-generated question about a certain document """
 @dataclass
 class Question:
-   # TODO: INCLUDE ANSWERS
-   id: str=""                             # uuid4(), used to find what question an answer references
-   text: str=""                           # Raw text of question
-   embedding: Optional[np.ndarray]=None   # Embedded question
-   answers: List[Answer]=None             # Answers to the question
-   children: List['Question']=None        # List of follow-up questions
-   parents: List['Question']=None         # What this question is a follow-up to
-   neighbors: List['Question']=None       # NEW: Similar questions not directly related (uses answer_documents as a check)
-   domains: List[str]=None                # ßWhich domains this question falls under
-   confidence: float=1.0                  # How confident the model is in the validity of the question
-
-   def __post_init__(self):
-      if self.answer_documents is None:
-         self.answer_documents = []       # TODO: Set implementation?
-      if self.children is None:
-         self.children = []               # TODO: Set implementation?
-      if self.parents is None:
-         self.parents = []                # TODO: Set implementation?
-      if self.domains is None:
-         self.domains = []                # TODO: Set implementation?
+   id: str=field(default_factory=lambda: str(uuid.uuid4()))  # uuid4(), used to find what question an answer references
+   text: str=""                                              # Raw text of question
+   embedding:  Optional[np.ndarray]=None                     # Embedded question
+   answers:    List[Answer]=field(default_factory=list)      # Answers to the question
+   children:   List['Question']=field(default_factory=list)  # List of follow-up questions
+   parents:    List['Question']=field(default_factory=list)  # What this question is a follow-up to
+   neighbors:  Set['Question']=field(default_factory=set)    # Similar questions not directly related (uses answer_documents as a check)
+   domain_ids: Set[str]=field(default_factory=set)           # Which domains this question falls under
+   confidence: float=1.0                                     # How confident the model is in the validity of the question
 
 """
 A domain of knowledge
-Graph{ Domain -> Set[Question] -> List[Answer] -> List[Document] }
+Graph { Domain -> Set[Question] -> List[Answer] -> List[Document] }
 """
 @dataclass
 class Domain:
-   id: str                                # uuid4(), used to map new questions to existing domains
-   name: str='general'                    # Domain name
-   questions: Set[Question]               # Set of questions, inherently deduplicates
+   id: str=field(default_factory=lambda: str(uuid.uuid4()))  # uuid4(), used to map new questions to existing domains
+   name: str='general'                                       # Domain name
+   questions: Set[Question]=field(default_factory=set)       # Set of questions, deduplicates
+   
+   parent_domain: List['Domain']=field(default_factory=list) # Parent domain(s)
+   subdomains: List['Domain']=field(default_factory=list)    # Subdomain(s)
 
-   def __init__(self, name: str, questions: Set[Question]):
+   centroid: Optional[np.ndarray]=None                       # Avg. embedding, for splitting
+   variance: float=0.0                                       # Spread of questions
+
+   def __init__(self, name: str, questions: Set[Question], parent_domain: None):
       self.id=uuid.uuid4()                # Create new ID
       self.name = name                    # Name is as provided
       self.questions = questions          # Questions are as provided (as a set)
+      self.parent_domain = parent_domain
 
 """
 Checks if two questions point to the same source knowledge
@@ -104,3 +100,147 @@ def are_same_question(q1: Question, q2: Question, threshold: float=0.7) -> bool:
    
    # Check 2: Do they point to the same knowledge?
    return has_circular_dependency(q1, q2)
+
+"""
+Finds the centroid of a domain in embedding space
+The axis for divergence checking
+"""
+def find_centroid(domain: Domain) -> np.ndarray:
+   if not domain.questions:
+      return None
+   
+   embeddings = [q.embeddings for q in domain.questions if q.embedding is not None]
+
+   if not embeddings:
+      return None
+   
+   return np.mean(embeddings, axis=0)
+
+"""
+Do two questions share similar source documents?
+Determines if they belong to the same subdomain
+"""
+def share_docs(q1: Question, q2: Question, threshold: float=0.5) -> bool:
+   # Get source documents from all answers
+   q1_docs = set()
+   for answer in q1.answers:
+      q1_docs.update(doc.id for doc in answer.source_documents)
+
+   q2_docs = set()
+   for answer in q2.answers:
+      q2_docs.update(doc.id for doc in answer.source_documents)
+
+   if not q1_docs or q2_docs:
+      return False
+   
+   # Jaccard similarity: intersection / union
+   intersection = len(q1_docs & q2_docs)
+   union = len(q1_docs | q2_docs)
+
+   overlap = intersection / union if union > 0 else 0
+   return overlap > threshold
+
+"""
+Find similar questions that aren't parents or children
+These are candidates for domain clustering
+"""
+def find_neighbors(
+   question: Question,
+   all_questions: List[Question],
+   similarity_threshold: float=0.7,
+   max_neighbors: int=10
+) -> Set[Question]:
+   neighbors = set()
+
+   # Get existing parents and children to exclude
+   exclude = set(question.parents + question.children + [question])
+
+   for other in all_questions:
+      if other in exclude:
+         continue
+
+      # Check similarity
+      sim = cosine_similarity(question.embedding, other.embedding)
+      if sim > similarity_threshold:
+         neighbors.add(other)
+
+      if len(neighbors) >= max_neighbors:
+         break
+   
+   return neighbors
+
+"""
+Recursively find subdomain clusters within a domain
+Returns a list of new subdomains discovered
+"""
+def check_divergence(
+   domain: Domain,
+   all_questions: List[Question],
+   depth: int = 0,
+   max_depth: int=3,
+   min_divergence: float=0.3,
+   min_cluster_size: int=5
+) -> List[Domain]:
+   # Base case: too deep or too few questions
+   if depth >= max_depth or len(domain.questions) < min_cluster_size * 2:
+      return []
+   
+   # Find domain axis (centroid)
+   axis = find_centroid(domain)
+   if axis is None:
+      return []
+   
+   # Prepare for new subdomains, track already processed
+   new_subdomains = []
+   processed = set()
+
+   # Search for divergent questions
+   for question in domain.questions:
+      if question in processed:
+         continue
+      
+      # Check alignment with domain axis
+      alignment = cosine_similarity(question.embedding, axis)
+
+      # If divergent enough, check for cluster
+      if alignment < (1.0 - min_divergence):  # Low alignment = high divergence
+         # Build cluster around divergent question
+         cluster = {question}
+         processed.add(question)
+
+         # Process neighbors and check if they share docs (indicates shared subdomain)
+         if not question.neighbors:
+            question.neighbors = find_neighbors(question, list(domain.questions))
+
+         for neighbor in question.neighbors:
+            if neighbor in processed:
+               continue
+
+            # Check for shared source documents (same subdomain)
+            if share_docs(question, neighbor, threshold=0.5):
+               cluster.add(neighbor)
+               processed.add(neighbor)
+
+         # If cluster is satisfactory, create subdomain
+         if len(cluster) >= min_cluster_size:
+            subdomain_name = DomainClassifier.identify_subdomain(list(cluster))
+
+            new_subdomain = Domain(
+               name=subdomain_name,
+               questions=cluster,
+               parent_domain=domain
+            )
+            new_subdomain.centroid = find_centroid(new_subdomain)
+
+            new_subdomains.append(new_subdomain)
+            domain.subdomains.append(new_subdomain)
+
+            # Recursive check on this subdomain
+            deeper_subdomains = check_divergence(
+               new_subdomain,
+               all_questions,
+               depth=depth+=1
+            )
+            new_subdomains.extend(deeper_subdomains)
+
+   return new_subdomains
