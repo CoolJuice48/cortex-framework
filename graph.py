@@ -308,3 +308,72 @@ def split_domain(
    except Exception as e:
       print(f"Error parsing subdomain response: {e}")
       return [f"{domain_name}_1", f"{domain_name}_2"]  # Fallback
+   
+"""
+Reassigns questions from old domain to new subdomains
+Uses an LLM, but could use centroid + nearest centroid at risk of reduced accuracy
+"""
+def reassign_questions_to_subdomains(
+   graph: KnowledgeGraph,
+   classifier: DomainClassifier,
+   old_domain: str,
+   new_subdomains: List[str]
+) -> None:
+   questions = [q for q in graph.questions.values() if old_domain in q.domains]
+   print(f"\nReassigning {len(questions)} questions from '{old_domain}' to subdomains...")
+
+   for question in questions:
+      prompt = f"""Which subdomain does this question belong to?
+
+      Question: {question.text}
+
+      Available subdomains:
+      {chr(10).join(f"- {sd}" for sd in new_subdomains)}
+
+      Return ONLY the subdomain name, nothing else."""
+
+      # Query LLM
+      response = classifier.client.messages.create(
+         model="claude-sonnet-4-20250514",
+         max_tokens=50,
+         messages=[{"role": "user", "content": prompt}]
+      )
+
+      # Parse subdomain
+      subdomain = response.content[0].text.strip().lower()
+
+      # Update question's domains
+      question.domains.remove(old_domain)
+      if subdomain in new_subdomains:
+         question.domains.append(subdomain)
+      else:
+         question.domains.append(new_subdomains[0]) # Fallback
+
+      print(f"  '{question.text[:60]}...' → {subdomain}")
+
+   # Remove old domain, add new ones
+   del graph.domains[old_domain]
+   for subdomain in new_subdomains:
+      graph.domains[subdomain] = []
+
+"""
+Periodically check if any domains should split
+"""
+def check_and_split_domains(graph, classifier):
+   for domain_name in list(graph.domains.keys()):
+      analysis = analyze_domain_coherence(graph, domain_name)
+      
+      if analysis['should_split']:
+         print(f"\n{'='*60}")
+         print(f"DOMAIN SPLIT TRIGGERED: {domain_name}")
+         print(f"  Variance: {analysis['variance']:.3f}")
+         print(f"  Avg similarity: {analysis['avg_similarity']:.3f}")
+         print(f"  Questions: {analysis['num_questions']}")
+         print(f"{'='*60}")
+         
+         # Split the domain
+         new_subdomains = split_domain(graph, classifier, domain_name)
+         print(f"New subdomains: {new_subdomains}")
+         
+         # Reassign questions
+         reassign_questions_to_subdomains(graph, classifier, old_domain=domain_name, new_subdomains=new_subdomains)
