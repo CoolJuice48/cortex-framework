@@ -14,7 +14,8 @@ LOG_DIR = "./log"
 OUTPUT_DIR = "./output"
 
 # Start small for testing
-LIMIT = 20  # Number of TSBs to process
+FILE_LIMIT = 20  # Number of TSBs to process
+ROW_LIMIT = 50   # Number of rows to process per document
 DOMAIN = "automotive"  # Start broad, not just transmission
 
 # =============================================================================
@@ -26,17 +27,17 @@ embedder = Embedder()
 graph = KnowledgeGraph(embedder)
 extractor = QuestionExtractor(API_KEY)
 loader = DocumentLoader(
-    embedder,
-    log_file="tsb_test_run.log",
-    log_dir=LOG_DIR,
-    output_dir=OUTPUT_DIR
+   embedder,
+   log_file="tsb_test_run.log",
+   log_dir=LOG_DIR,
+   output_dir=OUTPUT_DIR
 )
 
 # =============================================================================
 # LOAD & INGEST
 # =============================================================================
 
-print(f"\nLoading up to {LIMIT} TSBs from {DATA_DIR}...")
+print(f"\nLoading up to {FILE_LIMIT} files from {DATA_DIR}...")
 
 # Option A: Load ALL TSBs (test self-organization)
 stats = loader.load_and_ingest(
@@ -45,7 +46,8 @@ stats = loader.load_and_ingest(
    directory=DATA_DIR,
    domain=DOMAIN,
    file_extensions=['.tsv'],
-   limit=LIMIT
+   limit=FILE_LIMIT,
+   row_limit=ROW_LIMIT
 )
 
 # Option B: Filter to transmission only (uncomment to use)
@@ -76,11 +78,11 @@ print(f"Duplicates caught: {stats['duplicates']}")
 print(f"Errors: {stats['errors']}")
 
 if stats['questions_extracted'] > 0:
-    dedup_rate = stats['duplicates'] / stats['questions_extracted'] * 100
-    print(f"Deduplication rate: {dedup_rate:.1f}%")
+   dedup_rate = stats['duplicates'] / stats['questions_extracted'] * 100
+   print(f"Deduplication rate: {dedup_rate:.1f}%")
 
 print(f"\nFinal graph size: {len(graph.questions)} questions")
-print(f"Root questions: {len(graph.get_roots(DOMAIN))}")
+print(f"Root questions: {len(graph.get_question_roots(DOMAIN))}")
 
 # =============================================================================
 # ANALYZE GRAPH STRUCTURE
@@ -90,7 +92,7 @@ print(f"\n{'='*60}")
 print(f"GRAPH HIERARCHY (Top 10 roots)")
 print(f"{'='*60}")
 
-roots = graph.get_roots(DOMAIN)
+roots = graph.get_question_roots(DOMAIN)
 for i, root in enumerate(roots[:10], 1):
    print(f"\n{i}. {root.text}")
    if root.children:
@@ -108,7 +110,7 @@ print(f"\n{'='*60}")
 print(f"TESTING QUERIES")
 print(f"{'='*60}")
 
-from extraction import query_graph
+from graph import query_graph
 
 test_queries = [
    "What causes transmission problems?",
@@ -137,7 +139,7 @@ print(f"{'='*60}")
 # Save the graph for later use
 import pickle
 
-graph_path = os.path.join(OUTPUT_DIR, f"graph_{DOMAIN}_{LIMIT}docs.pkl")
+graph_path = os.path.join(OUTPUT_DIR, f"graph_{DOMAIN}_{FILE_LIMIT}docs.pkl")
 with open(graph_path, 'wb') as f:
    pickle.dump(graph, f)
 print(f"Saved graph to: {graph_path}")

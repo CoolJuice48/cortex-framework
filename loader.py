@@ -1,5 +1,5 @@
 from embed import Embedder
-from graph import KnowledgeGraph
+from graph import KnowledgeGraph, cosine_similarity
 from extraction import QuestionExtractor, insert_question_smart
 from structs import Document
 from pathlib import Path
@@ -80,7 +80,8 @@ class DocumentLoader:
       directory: str,
       file_extensions: List[str] = ['.txt', '.json'],
       filter_fn: Optional[Callable[[str], bool]] = None,
-      limit: Optional[int] = None
+      limit: Optional[int] = None,
+      row_limit: int=None
    ) -> List[Document]:
       documents = []
       directory_path = Path(directory)
@@ -106,7 +107,7 @@ class DocumentLoader:
       # Load each file
       for filepath in files:
          try:
-            docs = self._load_single_file(filepath)
+            docs = self._load_single_file(filepath, row_limit=row_limit)
             if docs:
                documents.extend(docs)
          except Exception as e:
@@ -121,11 +122,11 @@ class DocumentLoader:
    Returns a list, one document or multiple (for CSV/TSV)
    Text files return a single item list
    """
-   def _load_single_file(self, filepath: Path) -> Optional[List[Document]]:
+   def _load_single_file(self, filepath: Path, row_limit: int=None) -> Optional[List[Document]]:
       extension = filepath.suffix.lower()
       # Handle tabular data
       if extension in ['.csv', '.tsv']:
-         return self._load_tabular_file(filepath, extension)
+         return self._load_tabular_file(filepath, extension, row_limit=row_limit)
       
       # Handle text files
       elif extension in ['.txt', '.json', '.md']:
@@ -139,7 +140,7 @@ class DocumentLoader:
    Loads CSV/TSB file, each row becoming a document
    Assumes first row contains headers
    """
-   def _load_tabular_file(self, filepath: Path, extension: str) -> List[Document]:
+   def _load_tabular_file(self, filepath: Path, extension: str, row_limit: int=None) -> List[Document]:
       delimiter = '\t' if extension == '.tsv' else ','
       documents = []
 
@@ -147,6 +148,11 @@ class DocumentLoader:
          reader = csv.DictReader(f, delimiter=delimiter)
 
          for i, row in enumerate(reader):
+            # Apply row limit if specified
+            if row_limit and i >= row_limit:
+               self.logger.info(f"Reached row limit ({row_limit}), stopping")
+               break
+
             # Convert row to text (concatenate all fields)
             row_text = ' | '.join(f"{k}: {v}" for k, v in row.items() if v)
 
@@ -162,6 +168,10 @@ class DocumentLoader:
                text=row_text,
                metadata=metadata
             )
+
+            # Show progress every 10 rows
+            if i % 10 == 0:
+               self.logger.info(f"  Processing row {i+1}...")
 
             doc.embedding = self.embedder.embed(row_text)
             documents.append(doc)
@@ -263,22 +273,53 @@ class DocumentLoader:
          'duplicates': 0,
          'errors': 0
          }
+      
+      # List of existing questions
+      all_questions = []
 
       for doc in documents:
          try:
             # Add document to graph
             graph.add_document(doc)
 
-            # Extract and add questions
-            self.logger.info(f"\nProcessing: {doc.metadata.get('filename', doc.id)}")
-            questions = extractor.extract_from_text(doc.text, doc, num_questions=5)
+            # STEP ONE: Check if this doc answers existing questions
+            existing_answered = []
 
-            # Add question to graph, update nearby nodes
+            # Optimize, only check questions in the same domain
+            relevant_questions = [
+                  q for q in graph.questions.values()
+                  if domain in q.domains
+            ]
+            # If no domain filter (early in ingestion), check all
+            if not relevant_questions:
+               relevant_questions = list(graph.questions.values())
+
+            # Use filtered list of only relevant, domain-specific questions
+            for question in relevant_questions:
+               similarity = cosine_similarity(question.embedding, doc.embedding)
+               if similarity > 0.75: # Threshold
+                  question.answer_documents.append(doc)
+                  existing_answered.append(question.text)
+
+            if existing_answered:
+               self.logger.info(f"  Document answers {len(existing_answered)} existing questions")
+            
+            # STEP TWO: Extract new questions
+            questions = extractor.extract_from_text(
+               doc.text,
+               doc,
+               num_questions=5,
+               existing_questions=all_questions + existing_answered # More context
+            )
+
+            # STEP 3: Add new questions to graph, update nearby nodes
+            self.logger.info(f"\nProcessing: {doc.metadata.get('filename', doc.id)}")
             for q_text, answer_docs in questions:
                result = insert_question_smart(graph, q_text, answer_docs, domain)
                # Successful question addition
                if result:
                   total_stats['questions_added'] += 1
+                  all_questions.append(q_text) # Add to question list
                   self.logger.info(f"  Added: {q_text}")
                # Duplicate question, record failed addition
                else:

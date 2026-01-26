@@ -155,12 +155,14 @@ def query_graph(
    question_text: str,
    top_k: int = 5
 ) -> List[Tuple[Question, float]]:
+   # Embed query
    query_embedding = graph.embedder.embed(question_text)
    
+   # Compare to all questions
    results = []
-   for q in graph.questions.values():
-      similarity = cosine_similarity(query_embedding, q.embedding)
-      results.append((q, similarity))
+   for question in graph.questions.values():
+      similarity = cosine_similarity(query_embedding, question.embedding)
+      results.append((question, similarity))
    
    # Sort by similarity, return top k
    results.sort(key=lambda x: x[1], reverse=True)
