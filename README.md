@@ -48,4 +48,4 @@ Cortex_v1/
 
 ## License
 
-MIT
+OptIn, L.L.C.
