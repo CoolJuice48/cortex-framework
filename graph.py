@@ -267,6 +267,18 @@ def analyze_domain_coherence(
          for answer in q.answers:
             all_docs.extend(answer.source_documents)
 
+         embs = [a.embedding for a in q.answers if a.embedding is not None]
+
+         if not embs:
+            # No embeddings available yet
+            return {
+               "domain": domain_name,
+               "question_id": q.id,
+               "status": "no_embeddings",
+            }
+
+         centroid = np.mean(np.asarray(embs, dtype=float), axis=0)
+
          if all_docs:
             centroid = np.mean([doc.embedding for doc in q.answers], axis=0)
             directions.append(centroid)

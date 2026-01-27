@@ -31,8 +31,8 @@ ROW_LIMIT = 100   # More documents to trigger splits
 DOMAIN = "automotive"  # Start broad
 
 # Log file name
-TEST_NUM = "test10"
-TAG = "stored_questions"
+TEST_NUM = "test12"
+TAG = "main_append_fix"
 from datetime import datetime
 TIMESTAMP = datetime.now().strftime('%m-%d-%y_%I:%M%p')
 LOG_FILE = f"{TEST_NUM}_{TIMESTAMP}_{TAG}.log"
@@ -181,7 +181,7 @@ for i, doc in enumerate(documents, start=1):
                 if result:
                     for domain in doc_domains[1:]:
                         if domain not in result.domains:
-                            result.domains.append(domain)
+                            result.domains.append(domain.name)
 
                     total_stats['questions_added'] += 1
                     all_questions.append(q_text)
