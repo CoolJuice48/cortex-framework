@@ -1,11 +1,11 @@
+## 01/26/26
 TODO:
-- Change functions to involve Domain, Answer, and modified Question classes
-- Add __init__(self) to new classes, determine when to use them
-- Refactor graph to involve domains, which contain questions, which contain answers
-- Determine where to use sets (anywhere duplication may occur, ask if it's better)
 - Global set of IDs for domains, docs, etc? To help speed data retrieval & catalogging
 
 DONE:
+- Determine where to use sets (anywhere duplication may occur, ask if it's better)
+- Refactor graph to involve domains, which contain questions, which contain answers
+- Change functions to involve Domain, Answer, and modified Question classes
 - Questions are contained in a domain, which holds a set of questions for deduplication
    - Allows for the same question to appear in multiple domains
 - Each Answer contains a list of question_IDs, as each answer may answer multiple questions
@@ -58,3 +58,47 @@ fn check_divergence(domain: Domain, depth: int=0, split: bool=False, min_sim: fl
             check_divergence(neighbor.domain, depth+=1, split=False) # Don't want to go O(n^3) with list of domains
    
    return new_domains
+
+## 01/27/26
+TODO:
+- Determine best Q&A linking structure
+- Refactor KnowledgeGraph to be lighter & hashable
+   - Graph should ONLY store ids, NOT the entire objects
+
+DONE:
+-
+
+"""
+Intake query as string
+Returns:
+   query as Question object if is_new_question()
+   Otherwise returns existing question equal to query
+"""
+def intake_query(query: str) -> Question:
+   embedded_query = self.embedder.embed(query)
+
+   if is_new_question(embedded_query):
+      question = Question(
+         text=query,
+         embedding=embedded_query
+      )
+      graph.add_question(question)
+      return Question
+
+   else:
+      return find_existing_question(embedded_query)
+
+"""
+Checks if embedded query is an existing question
+Returns:
+   True if existing, False if not
+"""
+def is_new_question(question: np.ndarray) -> bool:
+   similar_qs = find_similar_questions(question)
+   for q in similar_qs:
+      if are_same_question(question, q.embedding):
+         return True
+      else:
+         return False
+
+def can_be_answered_now(question: np.ndarray) -> bool:

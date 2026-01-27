@@ -16,22 +16,28 @@ class DomainClassifier:
    Asks LLM to identify which domain(s) a document belongs to
    Returns list of domains (can be multiple)
    """
-   def identify_domain(self, text: str, existing_domains: List[str]=None) -> List[str]:
-      existing_text = ""
-      if existing_domains:
-         existing_text = f"""
-         Existing domains in the system:
-         {chr(10).join(f"- {d}" for d in existing_domains)}
+   def identify_domain(
+      self,
+      text: str,
+      existing_domains: List[str]=None,
+      metadata: dict=None
+   ) -> List[str]:
+      hint = ""
+      if metadata:
+         domain_hint = metadata.get('domain', '')
+         subdomain_hint = metadata.get('subdomain', '')
+         if domain_hint:
+            hint = f"\nHint: This document comes from the '{domain_hint}' domain"
+            if subdomain_hint:
+               hint += f", specifically '{subdomain_hint}'"
 
-         You can assign to existing domains OR suggest new ones if this content doesn't fit.
-         """
-      
-      prompt = f"""Analyze this/these document(s) and identify what domain(s) it/they belong(s) to.
+      prompt = f"""Analyze this document and identify what domain(s) it belongs to.
 
       Document:
       {text[:1500]}
+      {hint}
 
-      {existing_text}
+      Existing domains: {existing_domains}
 
       Requirements:
       - Use 1-3 specific domains (e.g., "transmission", "brake_system", "engine_cooling")

@@ -216,36 +216,34 @@ class DocumentLoader:
    """ 
    Extract metadata from file and content
    FILE FORMAT:
-   <SOURCE>_<DOMAIN>_<TYPE>_<YEAR>.{ext}
-   SOURCE: Document origin, ex. "NHTSA"
-   DOMAIN: Original document domain, ex. "transmission"
-   TYPE:   Additional label, ex. "tsb
-   YEAR:   Year of document creation, ex. "2026"
+   <SOURCE>_<DOMAIN>_<SUBDOMAIN>_<TYPE>_<YEAR>.{ext}
+   SOURCE:    Document origin, ex. "NHTSA"
+   DOMAIN:    Original document domain, ex. "transmission"
+   SUBDOMAIN: Optional subdomain of data
+   TYPE:      Additional label, ex. "tsb
+   YEAR:      Year of document creation, ex. "2026"
    """
    def _extract_metadata(
       self,
       filepath: Path,
-      splitter: str='_'
    ) -> dict:
+      # Extract words in filename, split on spliter parameter
+      parts = filepath.stem.split('_')
+
       metadata = {
          'filename': filepath.name,
          'path': str(filepath)
       }
 
-      # Extract words in filename, split on spliter parameter
-      parts = filepath.stem.split(splitter)
-
       # Additional metadata in file name (customize)
-      if len(parts) == 4:
-         metadata['source'] = parts[0]
-         metadata['domain'] = parts[1]
-         metadata['type']   = parts[2]
-         metadata['year']   = parts[3]
-      else:
-         print(f"Warning: {filepath.name} doesn't match expected format")
-         metadata['source'] = 'unknown'
-         metadata['domain'] = 'unknown'
-
+      if len(parts) >= 4:
+         metadata['source'] = parts[0]        # NHTSA, PubMed, etc.
+         metadata['domain'] = parts[1]        # automotive, medical, etc.
+         metadata['subdomain'] = parts[2]     # transmission, cardiology, etc.
+         metadata['type'] = parts[3]          # TSB, research, etc.
+         if len(parts) >= 5:
+            metadata['year'] = parts[4]
+      
       return metadata
 
    """

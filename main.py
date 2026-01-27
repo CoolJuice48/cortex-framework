@@ -14,6 +14,7 @@ from extraction import QuestionExtractor, insert_question_smart
 from classifier import DomainClassifier
 from loader import DocumentLoader
 from config import ANTHROPIC_API_KEY
+from datetime import datetime
 
 # =============================================================================
 # CONFIGURATION
@@ -31,9 +32,8 @@ ROW_LIMIT = 100   # More documents to trigger splits
 DOMAIN = "automotive"  # Start broad
 
 # Log file name
-TEST_NUM = "test12"
-TAG = "main_append_fix"
-from datetime import datetime
+TEST_NUM = "test13"
+TAG = "syntax_debug_in_main"
 TIMESTAMP = datetime.now().strftime('%m-%d-%y_%I:%M%p')
 LOG_FILE = f"{TEST_NUM}_{TIMESTAMP}_{TAG}.log"
 

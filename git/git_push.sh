@@ -3,7 +3,11 @@
 # ============================================
 # EDIT COMMIT MESSAGE HERE:
 # ============================================
-commit_message="Debug refactor with new structs, before modifying main"
+commit_message="Major restructuring
+- Changed Answer, Question, and Domain classes to store ids, not full objects
+- Changed KnowledgeGraph to store Question IDs, no longer Documents
+- Focused on making data storage hashable & fast
+- Improved Document metadata, pulls domain info from document name"
 # ============================================
 
 echo "Pulling latest changes first..."

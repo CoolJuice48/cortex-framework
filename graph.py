@@ -1,6 +1,6 @@
 # ------------------------------------------------------------------ #
 # Cortex imports
-from structs import Document, Question, Answer, are_same_question
+from structs import Document, Question, Answer, Domain, are_same_question
 from embed import Embedder, cosine_similarity
 from classifier import DomainClassifier
 # ------------------------------------------------------------------ #
@@ -14,9 +14,23 @@ import json
 class KnowledgeGraph:
    def __init__(self, embedder: Embedder):
       self.questions = {} # question_id (str) -> Question
+      self.answers = {}   # answer_id   (str) -> Answer
       self.documents = {} # document_id (str) -> Document
-      self.domains = {}   # domain_name (str)  -> Domain
+      self.domains = {}   # domain_name (str) -> Domain
+
       self.embedder = embedder
+
+   """ Fast Question lookup """
+   def get_question(self, q_id: str) -> Question:
+      return self.questions[q_id]
+   
+   """ Fast Answer lookup """
+   def get_answer(self, a_id: str) -> Answer:
+      return self.answers[a_id]
+   
+   """ Fast Document lookup """
+   def get_document(self, d_id) -> Document:
+      return self.documents[d_id]
 
    """ Adds a document to the graph """
    def add_document(self, doc: Document) -> None:
@@ -26,6 +40,19 @@ class KnowledgeGraph:
 
       # Add document to graph at doc.id
       self.documents[doc.id] = doc
+
+   """ Traverse relationships """
+   """ Get all answers for a question """
+   def get_question_answers(self, question: Question) -> List[Answer]:
+      return [self.answers[aid] for aid in question.answer_ids]   # TODO: Change Question struct
+   
+   """ Get all documents supporting an answer """
+   def get_answer_documents(self, answer: Answer) -> List[Document]:
+      return [self.documents[did] for did in answer.document_ids] # TODO: Change Answer struct
+   
+   """ Get all questions in a domain """
+   def get_domain_questions(self, domain: Domain) -> List[Question]:
+      return [self.questions[qid] for qid in domain.question_ids] # TODO: Change Domain struct
 
    """
    Adds a question to the graph

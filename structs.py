@@ -19,33 +19,32 @@ class Document:
    embedding: Optional[np.ndarray]=None   # Embedded document
    metadata: dict=None                    # Source, date, author, etc.
 
-""" An answer to one or more questions, supported by a document """
+""" An answer to one or more questions, supported by Document(s) """
 @dataclass
 class Answer:
-   id: str=field(default_factory=lambda: str(uuid.uuid4()))
-   text: str=""                                                  # Raw text of question
-   embedding: Optional[np.ndarray]=None                          # Embedded answer
-   source_documents: List[Document]=field(default_factory=list)  # List of documents which support this answer
-   confidence: float=1.0                                         # How confident the model is in the accuracy of the answer
+   id: str=field(default_factory=lambda: str(uuid.uuid4()))  # Hashable ID
+   text: str=""                                              # Raw text of question
+   embedding: Optional[np.ndarray]=None                      # Embedded answer text
+   # References by ID only
+   question_ids: Set[str]=field(default_factory=set)         # Which questions this answers (hashable, ids only)
+   document_ids: Set[str]=field(default_factory=set)         # Evidence/source documents (hashable, ids only)
+   confidence: float=1.0                                     # How confident the model is in the accuracy of the answer
 
-   # Which questions does this answer?
-   question_ids: Set[str] = field(default_factory=set)           # Use set for deduplication
-
-""" An LLM-generated question about a certain document """
+""" An LLM-generated or user-provided question """
 @dataclass
 class Question:
-   id: str=field(default_factory=lambda: str(uuid.uuid4()))    # uuid4(), used to find what question an answer references
-   text: str=""                                                # Raw text of question
-   embedding:    Optional[np.ndarray]=None                     # Embedded question
-   answers:      List[Answer]=field(default_factory=list)      # Answers to the question
-   children:     List['Question']=field(default_factory=list)  # List of follow-up questions
-   parents:      List['Question']=field(default_factory=list)  # What this question is a follow-up to
-   neighbors:    Set['Question']=field(default_factory=set)    # Similar questions not directly related (uses answer_documents as a check)
-   domains:      List[str]=field(default_factory=list)         # Which domains this question falls under (names as strings)
-   confidence:   float=1.0                                     # How confident the model is in the validity of the question
+   id: str=field(default_factory=lambda: str(uuid.uuid4()))  # Hashable ID
+   text: str=""                                              # Raw text of question
+   embedding:    Optional[np.ndarray]=None                   # Embedded question text
+   # References by ID only
+   answer_ids: Set[str]=field(default_factory=set)           # Answers to the question (hashable, ids only)
+   parent_ids: Set[str]=field(default_factory=set)           # Parent questions (hashable, ids only)
+   child_ids: Set[str]=field(default_factory=set)            # Child (aka follow-up) questions (hashable, ids only)
+   neighbor_ids: Set[str]=field(default_factory=set)         # Related questions (hashable, ids only)
+   domain_names: List[str]=field(default_factory=list)       # Which domains this question falls under (names as strings)
 
-   def __hash__(self):
-      return hash(self.id)
+   confidence: float=1.0                                     # How confident the model is in the validity of the question
+   source: str='extracted'                                   # 'extracted' or 'user_query'
 
 """
 A domain of knowledge
@@ -53,15 +52,15 @@ Graph { Domain -> Set[Question] -> List[Answer] -> List[Document] }
 """
 @dataclass
 class Domain:
-   id: str=field(default_factory=lambda: str(uuid.uuid4()))     # uuid4(), used to map new questions to existing domains
-   name: str='general'                                          # Domain name
-   questions: Set[Question]=field(default_factory=set)          # Set of questions, deduplicates
-   
-   parent_domain: List['Domain'] = field(default_factory=list)  # Parent domain(s), may be multiple
-   subdomains: List['Domain']=field(default_factory=list)       # Subdomain(s)
+   id: str=field(default_factory=lambda: str(uuid.uuid4()))  # uuid4(), used to map new questions to existing domains
+   name: str='general'                                       # Domain name as a string, default='general'
+   # References by ID only
+   question_ids: Set[str]=field(default_factory=set)         # Questions in this domain (hashable, ids only)
+   parent_domain_name: List[str]=field(default_factory=list) # Parent domain(s) (by name as string)
+   subdomain_names: List[str]=field(default_factory=list)    # Subdomain(s) (by name as string)
 
-   centroid: Optional[np.ndarray]=None                          # Avg. embedding, for splitting
-   variance: float=0.0                                          # Spread of questions
+   centroid: Optional[np.ndarray]=None                       # Avg. embedding, for splitting
+   variance: float=0.0                                       # Spread of questions
 
 """
 Checks if two questions point to the same source knowledge
