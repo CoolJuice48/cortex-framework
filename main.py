@@ -44,7 +44,7 @@ LOG_FILE = f"{TEST_NUM}_{TIMESTAMP}_{TAG}.log"
 print("Initializing components...")
 embedder = Embedder()
 graph = KnowledgeGraph(embedder)
-extractor = QuestionExtractor(ANTHROPIC_API_KEY)
+extractor = QuestionExtractor(ANTHROPIC_API_KEY, embedder)
 classifier = DomainClassifier(ANTHROPIC_API_KEY)  # NEW!
 loader = DocumentLoader(
    embedder,

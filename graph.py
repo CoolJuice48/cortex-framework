@@ -172,7 +172,7 @@ def insert_question_smart(
    added_question = graph.add_question(
       text=text,
       answer=answer,
-      domains=domain_names,
+      domain_names=domain_names,
       parent_id=parent_id
    )
 

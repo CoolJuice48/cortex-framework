@@ -44,6 +44,9 @@ class Question:
    domains:      List[str]=field(default_factory=list)         # Which domains this question falls under (names as strings)
    confidence:   float=1.0                                     # How confident the model is in the validity of the question
 
+   def __hash__(self):
+      return hash(self.id)
+
 """
 A domain of knowledge
 Graph { Domain -> Set[Question] -> List[Answer] -> List[Document] }

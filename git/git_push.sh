@@ -3,7 +3,7 @@
 # ============================================
 # EDIT COMMIT MESSAGE HERE:
 # ============================================
-commit_message="Add Answer and Domain struct implementations in functions"
+commit_message="Debug refactor with new structs, before modifying main"
 # ============================================
 
 echo "Pulling latest changes first..."
