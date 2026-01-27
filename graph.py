@@ -1,7 +1,7 @@
 # ------------------------------------------------------------------ #
 # Cortex imports
-from structs import Document, Question, Answer, are_same_question, cosine_similarity
-from embed import Embedder
+from structs import Document, Question, Answer, are_same_question
+from embed import Embedder, cosine_similarity
 from classifier import DomainClassifier
 # ------------------------------------------------------------------ #
 # Python imports
@@ -43,7 +43,7 @@ class KnowledgeGraph:
       new_q = Question(
          text=text,
          answers=[answer],
-         domain_names=domain_names
+         domains=domain_names
       )
       new_q.embedding = self.embedder.embed(text)
 
@@ -156,7 +156,7 @@ def insert_question_smart(
    temp_q = Question(
       text=text,
       answers=[answer],
-      domain_names=domain_names
+      domains=domain_names
    )
    temp_q.embedding = graph.embedder.embed(text)
 
@@ -172,7 +172,7 @@ def insert_question_smart(
    added_question = graph.add_question(
       text=text,
       answer=answer,
-      domain_names=domain_names,
+      domains=domain_names,
       parent_id=parent_id
    )
 

@@ -3,7 +3,7 @@
 # ============================================
 # EDIT COMMIT MESSAGE HERE:
 # ============================================
-commit_message="Changed answer_documents = List[Document] to answers = List[Answer] in Question class"
+commit_message="Add Answer and Domain struct implementations in functions"
 # ============================================
 
 echo "Pulling latest changes first..."

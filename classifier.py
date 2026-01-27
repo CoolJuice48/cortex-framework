@@ -158,3 +158,135 @@ class DomainClassifier:
                results[doc.id] = ["general"]
       
       return results
+   
+   """
+   Uses LLM API call to name subdomain based off its questions
+   Args:
+      questions: List of questions in respective subdomain
+      parent_domain_name: Optional parent domain name for context
+   Returns:
+      Subdomain name (lowercase with underscores)
+   """
+   def name_subdomain(
+      self,
+      questions: List[str],
+      parent_domain_name: str=None
+   ) -> str:
+      parent_context = ''
+      if parent_domain_name:
+         parent_context = f"\nThis is a subdomain of '{parent_domain_name}'."
+
+      prompt = f"""Based on these questions, suggest a specific, descriptive name for this knowledge subdomain.
+
+      Questions:
+      {chr(10).join(f"- {q}" for q in questions[:15])}
+      {parent_context}
+
+      Requirements:
+      - Name should be specific and descriptive
+      - Use lowercase with underscores
+      - Keep it concise (1-3 words)
+      - Examples: "hydraulic_brakes", "transmission_fluid", "engine_cooling"
+
+      Return ONLY the subdomain name, nothing else:"""
+
+      try:
+         response = self.client.messages.create(
+            model='claude-4-sonnet-20250514',
+            max_tokens=50,
+            messages=[{"role": "user", "content": prompt}]
+         )
+         
+         subdomain_name = response.content[0].text.strip().lower()
+
+         # Clean up subdomain_name (quotes, extra spaces, etc.)
+         subdomain_name = subdomain_name.replace('"', '').replace("'", '').strip()
+
+         # Validate format (lowercase, underscore, alphanumeric)
+         if not all(c.isalnum() or c == '_' for c in subdomain_name):
+            print(f"Warning: LLM returned invalid subdomain name '{subdomain_name}', using fallback")
+            return f"subdomain_{len(questions)}"
+         
+         return subdomain_name
+      
+      except Exception as e:
+         print(f"Error naming subdomain: {e}")
+         return f"subdomain_{len(questions)}"  # Fallback
+      
+   """
+   Names multiple subdomains at once
+   Args:
+      subdomain_question_groups: List of question lists, one per subdomain
+      parent_domain_name: Optional parent domain name
+   Returns:
+      List of subdomain names
+   """
+   def name_subdomains_batch(
+      self,
+      subdomain_question_groups: List[List[str]],
+      parent_domain_name: str = None
+   ) -> List[str]:
+      parent_context = ""
+      if parent_domain_name:
+         parent_context = f"\nThese are subdomains of '{parent_domain_name}'."
+      
+      # Build prompt with all groups
+      groups_text = []
+      for i, questions in enumerate(subdomain_question_groups, start=1):
+         sample = questions[:10]  # Limit per group
+         groups_text.append(f"\nGroup {i}:")
+         groups_text.extend(f"  - {q}" for q in sample)
+      
+      prompt = f"""Based on these question groups, suggest a specific name for each subdomain.
+
+      {chr(10).join(groups_text)}
+      {parent_context}
+
+      Requirements:
+      - Each name should be specific and descriptive
+      - Use lowercase with underscores
+      - Keep names concise (1-3 words)
+      - Format as JSON array of strings
+
+      Example: ["hydraulic_brakes", "transmission_fluid", "engine_cooling"]
+
+      Return subdomain names as JSON array:"""
+
+      try:
+         response = self.client.messages.create(
+            model="claude-sonnet-4-20250514",
+            max_tokens=200,
+            messages=[{"role": "user", "content": prompt}]
+         )
+         
+         text = response.content[0].text.strip()
+         
+         # Handle markdown fences
+         if "```json" in text:
+            start = text.find("```json") + 7
+            end = text.find("```", start)
+            text = text[start:end].strip()
+         elif "```" in text:
+            parts = text.split("```")
+            text = parts[1].strip()
+         
+         names = json.loads(text)
+         
+         # Validate and clean names
+         cleaned_names = []
+         for i, name in enumerate(names):
+            name = name.lower().replace('"', '').replace("'", '').strip()
+            if all(c.isalnum() or c == '_' for c in name):
+               cleaned_names.append(name)
+            else:
+               cleaned_names.append(f"subdomain_{i+1}")
+         
+         # Ensure enough names are present
+         while len(cleaned_names) < len(subdomain_question_groups):
+            cleaned_names.append(f"subdomain_{len(cleaned_names)+1}")
+         
+         return cleaned_names[:len(subdomain_question_groups)]
+         
+      except Exception as e:
+         print(f"Error naming subdomains: {e}")
+         return [f"subdomain_{i+1}" for i in range(len(subdomain_question_groups))]

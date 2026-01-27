@@ -1,16 +1,23 @@
-from structs import Document
+# ------------------------------------------------------------------ #
+# Cortex imports
+from structs import Document, Answer
 from graph import KnowledgeGraph, insert_question_smart
+from embed import Embedder
+# ------------------------------------------------------------------ #
+# Python imports
 import anthropic
 import json
 from typing import List, Tuple
+# ------------------------------------------------------------------ #
 
 class QuestionExtractor:
-   def __init__(self, api_key: str):
+   def __init__(self, api_key: str, embedder: Embedder):
       self.client = anthropic.Anthropic(api_key=api_key)
+      self.embedder = embedder
 
    """
    Uses an LLM to generate questions a given document answers
-   Returns list of (question_text, [source_document]) tuples
+   Returns list of (question_text, Answer) tuples
    """
    def extract_from_text(
       self,
@@ -18,7 +25,7 @@ class QuestionExtractor:
       doc: Document,
       num_questions: int=5,
       existing_questions: List[str]=None
-   ) -> List[Tuple[str, List[Document]]]:
+   ) -> List[Tuple[str, Answer]]:
       # Check running list of existing questions
       existing_q_text = ""
       if existing_questions and len(existing_questions) > 0:
@@ -42,42 +49,63 @@ class QuestionExtractor:
       - Questions should be at different levels of specificity (broad to specific)
       - Questions should be directly answerable from the document
       - Questions must be UNIQUE and not overlap with existing questions above
-      - Format as a JSON array of strings
-      - Don't include questions the document doesn't answer
+      - For each question, provide a brief answer (1-2 sentences) based on the document
+      - Format as a JSON array of objects with "question" and "answer" fields
 
       Example format:
-      ["What is X?", "How does Y work?", "What causes Z?"]
+      [
+      {{"question": "What is X?", "answer": "X is a component that..."}},
+      {{"question": "How does Y work?", "answer": "Y works by..."}}
+      ]
 
-      Generate the questions now:"""
+      Generate the questions and answers now:"""
 
       response = self.client.messages.create(
             model="claude-sonnet-4-20250514",
-            max_tokens=1000,
+            max_tokens=1500, # Increased to include answers
             messages=[{"role": "user", "content": prompt}]
       )
 
       # Parse response
       try:
-         questions_text = response.content[0].text
-         # Extract JSON array
-         questions_text = questions_text.strip()
+         response_text = response.content[0].text.strip()
 
          # Remove markdown fences
-         if "```json" in questions_text:
+         if "```json" in response_text:
             # Extract content between ```json and ```
-            start = questions_text.find("```json") + 7
-            end = questions_text.find("```", start)
-            questions_text = questions_text[start:end].strip()
-         elif "```" in questions_text:
+            start = response_text.find("```json") + 7
+            end = response_text.find("```", start)
+            response_text = response_text[start:end].strip()
+         elif "```" in response_text:
             # Handle plain ``` fences
-            parts = questions_text.split("```")
-            questions_text = parts[1].strip() if len(parts) > 1 else parts[0]
+            parts = response_text.split("```")
+            response_text = parts[1].strip() if len(parts) > 1 else parts[0]
 
-         questions = json.loads(questions_text.strip())
+         qa_pairs = json.loads(response_text.strip())
 
-         # Return as (question, [doc]) tuples
-         return [(q, [doc]) for q in questions]
-      
+         # Create Answer objects
+         results = []
+         for item in qa_pairs:
+            question_text = item.get('question', '')
+            answer_text = item.get('answer', '')
+
+            if not question_text:
+               continue
+
+            # Create answer object
+            answer = Answer(
+               text=answer_text,
+               source_documents=[doc],
+               confidence=1.0
+            )
+
+            if answer_text:
+               answer.embedding = self.embedder.embed(answer_text)
+            
+            results.append((question_text, answer))
+
+         return results
+
       # Parsing error
       except Exception as e:
          print(f"Error parsing LLM response: {e}")
@@ -86,13 +114,18 @@ class QuestionExtractor:
 
 """
 Ingest a document: extract questions with LLM and add to graph
-Returns stats about what was added
+Returns stats dict with shape
+{
+extracted,
+added,
+duplicate_counts
+}
 """
 def ingest_document_with_extractor(
    graph: KnowledgeGraph,
    doc: Document,
    extractor: QuestionExtractor,
-   domain: str="general",
+   domain_names: List[str]=["general"],
    existing_questions: List[str]=None
 ) -> dict:
    # Add document to graph
@@ -100,7 +133,7 @@ def ingest_document_with_extractor(
 
    # Extract questions using LLM
    print(f"Extracting questions from document: {doc.id}")
-   questions = extractor.extract_from_text(
+   qa_pairs = extractor.extract_from_text(
       doc.text,
       doc,
       num_questions=5,
@@ -108,14 +141,20 @@ def ingest_document_with_extractor(
    )
 
    stats = {
-      "extracted": len(questions),
+      "extracted": len(qa_pairs),
       "added": 0,
       "duplicates": 0
    }
 
-   for q_text, answer_docs in questions:
+   for q_text, answer in qa_pairs:
       # Attempt to add question (rejected if duplicate)
-      result = insert_question_smart(graph, q_text, answer_docs, domain)
+      result = insert_question_smart(
+         graph,       # KnowledgeGraph
+         q_text,      # Question as text
+         answer,      # Pass answer obkect
+         domain_names # List of domain names
+      )
+      
       if result is not None:
          stats["added"] += 1
          print(f"  Added '{q_text}'")

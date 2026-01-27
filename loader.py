@@ -1,9 +1,9 @@
 # ------------------------------------------------------------------ #
 # Cortex imports
-from embed import Embedder
-from graph import KnowledgeGraph, cosine_similarity
+from embed import Embedder, cosine_similarity
+from graph import KnowledgeGraph
 from extraction import QuestionExtractor, insert_question_smart
-from structs import Document
+from structs import Document, Answer
 from classifier import DomainClassifier
 # ------------------------------------------------------------------ #
 # Python imports
@@ -251,6 +251,8 @@ class DocumentLoader:
    """
    Load documents and ingest them into the graph
    Combines loading and ingestion into one step (may separate later)
+   Returns:
+      Stats dict with processing metrics
    """
    def load_and_ingest(
       self,
@@ -258,7 +260,6 @@ class DocumentLoader:
       extractor: QuestionExtractor,
       classifier: DomainClassifier,
       directory: str,
-      domain: str='unknown',
       **kwargs
    ) -> dict:
       # Document statistics
@@ -279,13 +280,7 @@ class DocumentLoader:
       
       if not documents:
          self.logger.warning("No documents loaded")
-         return {
-         'docs_processed': 0,
-         'questions_extracted': 0,
-         'questions_added': 0,
-         'duplicates': 0,
-         'errors': 0
-         }
+         return total_stats
       
       # List of existing questions
       all_questions = []
@@ -298,31 +293,50 @@ class DocumentLoader:
             # STEP ZERO: Identify domains for this document
             existing_domains = list(graph.domains.keys())
             doc_domains = classifier.identify_domain(doc.text, existing_domains)
+
             # Log domains
             self.logger.info(f"\nDoc {i}/{len(documents)}: {doc.id}")
             self.logger.info(f"  Identified domains: {', '.join(doc_domains)}")
 
             # STEP ONE: Check if this doc answers existing questions
-            existing_answered = [] # TODO: CHANGE TO A SET FOR AUTO DEDUPING
-            for domain in doc_domains:
-               # Optimize, only check questions in the same domain
-               relevant_questions = [
-                  q for q in graph.questions.values()
-                  if domain in q.domains
-               ]
-               # If no domain filter (early in ingestion), check all
-               if not relevant_questions:
-                  relevant_questions = list(graph.questions.values())
+            existing_answered = []
+            for domain_name in doc_domains:
+               # Get questions from this domain
+               if domain_name not in graph.domains:
+                  continue
 
-               # Check for relevant questions in domain
+               domain = graph.domains[domain_name]
+               relevant_questions = list(domain.questions)
+
+               # Check each question
                for question in relevant_questions:
                   similarity = cosine_similarity(question.embedding, doc.embedding)
                   if similarity > 0.75: # Threshold
-                     question.answers.source_documents.append(doc)
+                     # Add document to this question's answers
+                     # Find or create an answer for this document
+                     found_answer = False
+                     for answer in question.answers:
+                        if doc in answer.source_documents:
+                           found_answer = True
+                           break
+                     
+                     if not found_answer:
+                        # Create new answer linking this question to this doc
+                        new_answer = Answer(
+                           text="",                # Just document link, no text
+                           source_documents=[doc],
+                           confidence=0.8          # Lower confidence for auto-link
+                        )
+                        new_answer.question_ids.add(question.id)
+                        question.answers.append(new_answer)
+                     
                      existing_answered.append(question.text)
             
-            # STEP TWO: Extract new questions
-            questions = extractor.extract_from_text(
+            if existing_answered:
+               self.logger.info(f"  Document answers {len(existing_answered)} existing questions")
+
+            # STEP TWO: Extract new questions with LLM
+            qa_pairs = extractor.extract_from_text(
                doc.text,
                doc,
                num_questions=5,
@@ -331,8 +345,14 @@ class DocumentLoader:
 
             # STEP 3: Add new questions to graph, update nearby nodes
             self.logger.info(f"\nProcessing doc [{i}/{len(documents)}]: {doc.metadata.get('filename', doc.id)}")
-            for q_text, answers in questions:
-               result = insert_question_smart(graph, q_text, answers, domain)
+            for q_text, answer in qa_pairs:
+               result = insert_question_smart(
+                  graph,
+                  q_text,
+                  answer,
+                  doc_domains
+               )
+
                # Successful question addition
                if result:
                   total_stats['questions_added'] += 1
@@ -345,7 +365,7 @@ class DocumentLoader:
             
             # Update metadata
             total_stats['docs_processed'] += 1
-            total_stats['questions_extracted'] += len(questions)
+            total_stats['questions_extracted'] += len(qa_pairs)
 
          # Record doc.id of failed node
          except Exception as e:
@@ -388,24 +408,45 @@ class DocumentLoader:
 
       return embedding_data
    
-   """Save extracted questions for a document"""
-   def save_questions_cache(self, doc_id: str, questions: List[Tuple[str, List[Document]]]):
+   """
+   Saves extracted questions & answers for a document
+   Args:
+      doc_id: Document ID
+      qa_pairs: List of (question_text, Answer) tuples
+   """
+   def save_questions_cache(
+      self,
+      doc_id: str,
+      qa_pairs: List[Tuple[str, Answer]]
+   ) -> None:
       cache_path = os.path.join(self.questions_dir, f"{doc_id}.json")
       
       # Convert to JSON-serializable format
-      cache_data = [
-         {
+      cache_data = []
+      for q_text, answer in qa_pairs:
+         cache_data.append({
             'question': q_text,
-            'answer_doc_ids': [doc.id for doc in answer_docs]
-         }
-         for q_text, answer_docs in questions
-      ]
+            'answer_text': answer.text,
+            'answer_doc_ids': [doc.id for doc in answer.source_documents],
+            'confidence': answer.confidence
+         })
       
       with open(cache_path, 'w') as f:
          json.dump(cache_data, f, indent=2)
    
-   """Load cached questions for a document"""
-   def load_questions_cache(self, doc_id: str, all_documents: dict) -> Optional[List[Tuple[str, List[Document]]]]:
+   """
+   Loads cached questions & answers for a document
+   Args:
+      doc_id: Document ID
+      all_documents: Dict of doc_id -> Document, for reconstructing Answer objects
+   Returns:
+      List of (question_text, Answer) tuples, or None if cache not found
+   """
+   def load_questions_cache(
+      self,
+      doc_id: str,
+      all_documents: dict
+   ) -> Optional[List[Tuple[str, Answer]]]:
       cache_path = os.path.join(self.questions_dir, f"{doc_id}.json")
       
       if not os.path.exists(cache_path):
@@ -415,14 +456,34 @@ class DocumentLoader:
          with open(cache_path, 'r') as f:
             cache_data = json.load(f)
          
-         # Reconstruct questions with Document objects
-         questions = []
+         # Reconstruct questions with Answer objects
+         qa_pairs = []
          for item in cache_data:
             q_text = item['question']
-            answer_docs = [all_documents[doc_id] for doc_id in item['answer_doc_ids'] if doc_id in all_documents]
-            questions.append((q_text, answer_docs))
+            answer_text = item.get('answer_text', '')
+            confidence = item.get('confidence', 1.0)
+
+            # Reconstruct source documents
+            source_docs = [
+               all_documents[doc_id]
+               for doc_id in item['answer_doc_ids']
+               if doc_id in all_documents
+            ]
+
+            # Create Answer object
+            answer = Answer(
+               text=answer_text,
+               source_documents=source_docs,
+               confidence=confidence
+            )
+
+            # Re-embed answer text if exists
+            if answer_text and hasattr(self, 'embedder'):
+               answer.embedding = self.embedder.embed(answer)
+
+            qa_pairs.append((q_text, answer))
       
-         return questions
+         return qa_pairs
          
       except Exception as e:
          self.logger.warning(f"Failed to load question cache for {doc_id}: {e}")
