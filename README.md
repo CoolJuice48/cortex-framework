@@ -6,6 +6,10 @@ Autonomous knowledge organization system using multiple LLM calls and hierarchic
 
 The Cortex Framework builds a self-organizing knowledge graph from unstructured documents (tabular, papers, textbooks). Questions are extracted automatically, duplicates detected via circular dependency checking, and hierarchies emerge naturally from structural & semantic similarity.
 
+## How to Navigate
+
+Start by reading structs.py, which contains the Question, Answer, Domain, and Document dataclasses which the rest of the program is built on. See 'Project Structure' below to see which files they're used in.
+
 ## Installation
 ```bash
 pip install -r requirements.txt
